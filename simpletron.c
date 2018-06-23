@@ -35,17 +35,18 @@ int main(int argc, char *argv[])
     fsalida=NULL;
 
 
-    if((st=validar_argumentos(argc, argv, &argumentos, &cant_palabras, &fentrada, &fsalida))!=ST_OK){
+    if((st=validar_argumentos(argc, argv, &argumentos, &cant_palabras))!=ST_OK){
     	if (st=ST_AYUDA){
-    		imprimir_ayuda();
+    		imprimir_ayuda(st);
     		return ST_OK;
     	}
 
     	else{
-    		imprimir_error(st)
+    		imprimir_error(st);
     		return EXIT_FAILURE;
     	}	
     }
+
 
 	if((st=inicializar_simpletron(&simpletron, cant_palabras))!=ST_OK){
 		imprimir_error(st)
@@ -56,7 +57,11 @@ int main(int argc, char *argv[])
    		return EXIT_FAILURE;
    	}
 
-   	if (!(strcmp(argumentos.ia,OPCION_BIN))){
+   	if((st=abrir_nombre_archrada(&argumentos, fentrada))!=ST_OK){
+   		return EXIT_FAILURE;
+   	}
+
+   	if (){
 		if((st=leer_archivo_bin(&simpletron, cant_palabras, fentrada))!=ST_OK){
        		free(simpletron);
        		simpletron=NULL;
@@ -90,7 +95,11 @@ int main(int argc, char *argv[])
    		return EXIT_FAILURE;
 	}
 
-   	if (!(strcmp(argumentos.oa,OPCION_BIN))){
+   	if((st=abrir_archivo_salida(&argumentos, fsalida))!=ST_OK){
+
+   	}
+
+   	if (argumentos.f_bin==TRUE){
 		if((st=imprimir_archivo_bin(simpletron, fsalida))!=ST_OK){
        		free(simpletron);
        		simpletron=NULL;
@@ -185,69 +194,19 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 			return ST_OK;
 		}	
 		else {
-			if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_BIN))){
+			if(!(strcmp(argv[ARG_POS_FSALIDA2_TIPO],OPCION_BIN))){
 				argumentos->f_txt=FALSE;
 				argumentos->f_bin=TRUE;
-				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
+				argumentos->inicio_arch=argv[ARG_POS_FENTRADA3];
 				return ST_OK;
 			}	
-			if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_TXT))){
+			if(!(strcmp(argv[ARG_POS_FSALIDA2_TIPO],OPCION_TXT))){
 				argumentos->f_txt=TRUE;
 				argumentos->f_bin=FALSE;
-				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
+				argumentos->inicio_arch=argv[ARG_POS_FENTRADA3];
 				return ST_OK;
 			}	
-}
-
-
-/*		if(!(strcmp(argv[ARG_POS_FENTRADA_TIPO],OPCION_TXT))){
-			if((*fentrada=fopen(argv[ARG_POS_FENTRADA_NOMBRE],"rt"))==NULL){
-				return ST_ERROR_APERTURA_ARCHIVO;
-			}
-			argumentos->ia=argv[ARG_POS_FENTRADA_TIPO];
 		}
-				else if (!(strcmp(argv[ARG_POS_FENTRADA_TIPO],OPCION_BIN))){
-					if((*fentrada=fopen(argv[ARG_POS_FENTRADA_NOMBRE],"rb"))==NULL){
-						return ST_ERROR_APERTURA_ARCHIVO;
-					}
-					argumentos->ia=argv[ARG_POS_FENTRADA_TIPO];
-				}
-		}
-
-		else if (!(strcmp(argv[ARG_POS_FENTRADA_NOMBRE],OPCION_STDIN))){
-			argumentos->i=argv[ARG_POS_FENTRADA_NOMBRE];
-			argumentos->ia=ARG_VALIDO;
-		}
-		else{	
-			return ST_ERROR_ARG_INV;		
-		}
-
-		if((strcmp(argv[ARG_POS_FSALIDA_TIPO],ARG_VALIDO))!=0){
-			if((strcmp(argv[ARG_POS_FSALIDA_NOMBRE],ARG_VALIDO))==0){
-				return ST_ERROR_APERTURA_ARCHIVO;
-			}
-			if(!(strcmp(argv[ARG_POS_FSALIDA_TIPO],OPCION_TXT))){
-				if((*fsalida=fopen(argv[ARG_POS_FSALIDA_NOMBRE],"wt"))==NULL){
-					return ST_ERROR_APERTURA_ARCHIVO;
-				}
-				argumentos->oa=argv[ARG_POS_FSALIDA_TIPO];
-			}
-			else if (!(strcmp(argv[ARG_POS_FSALIDA_TIPO],OPCION_BIN))){
-				if((*fsalida=fopen(argv[ARG_POS_FSALIDA_NOMBRE ],"wb"))==NULL){  
-					return ST_ERROR_APERTURA_ARCHIVO;
-				}
-				argumentos->oa=argv[ARG_POS_FSALIDA_TIPO];
-			}
-		}	
-	
-		else if (!(strcmp(argv[ARG_POS_FSALIDA_NOMBRE],OPCION_STDOUT))){
-			argumentos->o=argv[ARG_POS_FSALIDA_NOMBRE];
-			argumentos->oa=ARG_VALIDO;	
-		}
-		else{
-			return ST_ERROR_ARG_INV;
-		}	
-	}*/
 	}
 
 	return ST_OK;
@@ -263,7 +222,7 @@ y un size_t de cant_palabras para darle la memoria dinamica necesaria al vector 
 	if(!cant_palabras)
 		return ST_ERROR_NADA_QUE_CARGAR;
 
-	if((*simpletron = (simpletron_t *) calloc(sizeof(simpletron_t), 1))==NULL){
+	if((*simpletron = (simpletron_t *) calloc(1, sizeof(simpletron_t))==NULL){
 		return ST_ERROR_NO_MEM;
 	}
 	
@@ -280,6 +239,37 @@ y un size_t de cant_palabras para darle la memoria dinamica necesaria al vector 
 
 	return ST_OK;
 }
+
+status_t abrir_nombre_archrada( parametros_t * argumentos, FILE ** fentrada){
+	
+	char * aux;
+	char * comienzo;
+	char * fin;
+
+	aux=argumentos->inicio_arch;
+
+	for (comienzo = argumentos->inicio_arch; *comienzo!=DELIM_2PUNTOS; comienzo++)
+	{}
+
+   	if((fin=strrchr(aux,DELIM_2PUNTOS))!=NULL){
+		*fin='\0';
+		if(!(strcmp(aux,FMT_T)))
+			if((*fentrada=fopen(argumentos->nombre_arch,"rt"))==NULL)
+				return ST_ERROR_APERTURA_ARCHIVO;
+
+		if(!(strcmp(aux,FMT_B)))
+			if((*fentrada=fopen(argumentos->nombre_arch,"rb"))==NULL)
+				return ST_ERROR_APERTURA_ARCHIVO;
+	}
+	
+	else{
+		argumentos->nombre_arch=argumentos->inicio_arch;
+		if((*fentrada=fopen(argumentos->nombre_arch,"rt"))==NULL)
+			return ST_ERROR_APERTURA_ARCHIVO;
+	}
+	return ST_OK;
+}
+
 
 status_t leer_archivo_bin (simpletron_t ** simpletron, size_t cant_palabras, FILE *fentrada)
  /*recibe el puntero doble a la estructura de simpletron para cargar las instrucciones en el vector palabras, 
@@ -326,7 +316,7 @@ status_t leer_archivo_txt(simpletron_t ** simpletron, parametros_t argumentos, s
 	    		return ST_ERROR_FUERA_DE_RANGO;
 	    	}
 	    	
-	    	if((fin=strrchr(aux,';'))!=NULL)
+	    	if((fin=strrchr(aux,DELIM_COMA))!=NULL)
 	 			*fin='\0';
 	    	
 	    	for (comienzo = aux; isspace(*comienzo) && *comienzo!='\0'; comienzo++)

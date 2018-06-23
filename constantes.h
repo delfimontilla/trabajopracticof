@@ -22,7 +22,9 @@
 #define MAX_CANT_PALABRA 100
 #define MAX_CADENA 100
 #define OPCION_TXT "txt"
+#define FMT_T "t"
 #define OPCION_BIN "bin"
+#define FMT_B "b"
 #define ARG_H "h"
 #define ARG_CANT_PALABRAS "-m"
 #define ARG_FSALIDA "-f"
@@ -35,6 +37,8 @@
 #define TABULACION "\t"
 #define SALTO "\n"
 #define PREGUNTA "?"
+#define DELIM_COMA ';'
+#define DELIM_2PUNTOS ':'
 
 #define ARG_VALIDO "-"
 
