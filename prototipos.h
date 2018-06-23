@@ -10,6 +10,9 @@ status_t imprimir_error(status_t st);
 status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, size_t *cant_palabras);
 status_t inicializar_simpletron (simpletron_t **simpletron, size_t cant_palabras);
 
+status_t abrir_archivo_entrada(parametros_t *argumentos, FILE **fentrada);
+status_t abrir_archivo_salida(parametros_t *argumentos, FILE ** fsalida);
+
 status_t leer_archivo_txt(simpletron_t ** simpletron, parametros_t argumentos, size_t cant_palabras ,FILE *fentrada);
 status_t leer_archivo_bin(simpletron_t ** simpletron, size_t cant_palabras, FILE *fentrada);
 
