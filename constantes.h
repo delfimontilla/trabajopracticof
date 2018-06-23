@@ -19,8 +19,10 @@
 #define ARG_POS_FENTRADA3 5
 #define ARG_POS_H 1
 #define MIN_CANT_PALABRA 1
-#define MAX_CANT_PALABRA 100
+#define MAX_CANT_PALABRA 512
 #define MAX_CADENA 100
+#define MAX_CANT_OPCODE 128
+#define MAX_CANT_OPERANDO 512
 #define OPCION_TXT "txt"
 #define FMT_T "t"
 #define OPCION_BIN "bin"

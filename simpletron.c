@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
    		return EXIT_FAILURE;
    	}
 
-   	if (argumentos->fe_bin==TRUE){
+   	if (argumentos.fe_bin==TRUE){
 		if((st=leer_archivo_bin(&simpletron, cant_palabras, fentrada))!=ST_OK){
        		free(simpletron);
        		simpletron=NULL;
@@ -70,12 +70,12 @@ int main(int argc, char *argv[])
         		fclose(fentrada);
     		if(fsalida!=NULL)
 	   			fclose(fsalida);
-       		imprimir_error(st)
+       		imprimir_error(st);
    			return EXIT_FAILURE;
    		}
    	}
 
-   	else if (argumentos->fe_txt){
+   	else if (argumentos.fe_txt){
 		if((st=leer_archivo_txt(&simpletron, argumentos, cant_palabras, fentrada))!=ST_OK){
 	       	free(simpletron);
 	       	simpletron=NULL;
@@ -155,7 +155,7 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 {
 	char *pc=NULL;
 		
-	if(!argv|| !cant_palabras || !argumentos || !fentrada || !fsalida){
+	if(!argv|| !cant_palabras || !argumentos){
 		return ST_ERROR_PTR_NULO;
 	}
 
@@ -230,7 +230,7 @@ y un size_t de cant_palabras para darle la memoria dinamica necesaria al vector 
 		return ST_ERROR_NADA_QUE_CARGAR;
 	}	
 
-	if((*simpletron = (simpletron_t *) calloc(1, sizeof(simpletron_t))==NULL){
+	if((*simpletron = (simpletron_t *) calloc(1, sizeof(simpletron_t)))==NULL){
 		return ST_ERROR_NO_MEM;
 	}
 	
@@ -534,7 +534,7 @@ status_t liberar_memoria(simpletron_t ** simpletron)
 	return ST_OK;
 }
 
-status_t ejecutar_simpletron (simpletron_t ** simpletron, size_t cant_palabras)
+status_t ejecutar_simpletron (simpletron_t * simpletron, size_t cant_palabras)
  /*Recibe el puntero a la estructura de simpletron para hacer un análisis de las instrucciones que se encuentran
  en el vector palabras, y después se llama a una función que realiza la operación necesaria. 
  Ademas, se valida que el operando sea una posicion de memoria existente*/
@@ -544,94 +544,93 @@ status_t ejecutar_simpletron (simpletron_t ** simpletron, size_t cant_palabras)
 	st=ST_OK;
 
 	while(st==ST_OK){
+		if((simpletron->palabras)>0){	
+			if(0<(simpletron->opcode=simpletron->palabras[simpletron->contador_programa]/10000) && simpletron->opcode<MAX_CANT_OPCODE){
+				if(0<(simpletron->operando=(simpletron->palabras)-(simpletron->opcode)*10000) && simpletron->operando<MAX_CANT_OPERANDO){	
 
-		if ((*simpletron)->palabras[(*simpletron)->contador_programa]<0){
-			return ST_ERROR_PALABRA_NEG;
+					switch ((*simpletron)->opcode){
+						case (OP_LEER):
+							st=op_leer(simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case (OP_ESCRIBIR):
+							st=op_escribir(simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case (OP_CARGAR):
+							st=op_cargar(simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case (OP_GUARDAR):
+							st=op_guardar(simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case (OP_PCARGAR):
+							st=op_pcargar(simpletron,cant_palabras);
+							(*simpletron)->contador_programa++;
+							break;
+						case(OP_PGUARDAR):
+							st=op_pguardar(simpletron,cant_palabras);
+							(*simpletron)->contador_programa++;
+							break;
+						case(OP_SUMAR):
+							st=op_sumar(simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case(OP_RESTAR):
+							st=op_restar(simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case(OP_DIVIDIR):
+							st=op_dividir(simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case(OP_MULTIPLICAR):
+							st=op_multiplicar(simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case(OP_JMP):
+							st=op_jmp(simpletron);
+							break;
+						case(OP_JMPNEG):
+							if((*simpletron)->acumulador<0)
+								st=op_jmp(simpletron);
+							else
+								(*simpletron)->contador_programa++;
+							break;
+						case(OP_JMPZERO):
+							if((*simpletron)->acumulador==0)
+								st=op_jmp(simpletron);
+							else
+								(*simpletron)->contador_programa++;
+							break;
+						case(OP_JNZ):
+							if((*simpletron)->acumulador!=0)
+								st=op_jmp(simpletron);
+							else
+							 	(*simpletron)->contador_programa++;
+							break;
+						case(OP_DJNZ):
+							st=op_djnz(simpletron);
+							break;
+						case (OP_HALT):
+							st=ST_SALIR;
+							break;
+						default:
+							(*simpletron)->contador_programa++;
+						break;
+				}		
+			}
+			else
+				imprimir_error(ST_ERROR_FUERA_DE_RANGO);
 		}
-		else{		
-			(*simpletron)->opcode = (*simpletron)->palabras[(*simpletron)->contador_programa] /100;
-			/*divido por 100 entonces como es un int borra los numeros despues de la coma y me queda el entero que quiero (ejemplo, si llega 2598 me queda 25.98 pero se guarda 25)*/
-			(*simpletron)->operando = (*simpletron)->palabras[(*simpletron)->contador_programa] - ((*simpletron)->opcode*100);
-			/*necesito los ultimos dos entonces al multiplicar opcode por 100 tengo 2500 del ejemplo entonces 2598-2500 da 98 que son los ultimos dos digitos que necesito*/
-		
-			if((*simpletron)->operando > cant_palabras)
-				return ST_ERROR_FUERA_DE_RANGO;
-
-
-			switch ((*simpletron)->opcode){
-				case (OP_LEER):
-					st=op_leer(simpletron);
-					(*simpletron)->contador_programa++;
-					break;
-				case (OP_ESCRIBIR):
-					st=op_escribir(simpletron);
-					(*simpletron)->contador_programa++;
-					break;
-				case (OP_CARGAR):
-					st=op_cargar(simpletron);
-					(*simpletron)->contador_programa++;
-					break;
-				case (OP_GUARDAR):
-					st=op_guardar(simpletron);
-					(*simpletron)->contador_programa++;
-					break;
-				case (OP_PCARGAR):
-					st=op_pcargar(simpletron,cant_palabras);
-					(*simpletron)->contador_programa++;
-					break;
-				case(OP_PGUARDAR):
-					st=op_pguardar(simpletron,cant_palabras);
-					(*simpletron)->contador_programa++;
-					break;
-				case(OP_SUMAR):
-					st=op_sumar(simpletron);
-					(*simpletron)->contador_programa++;
-					break;
-				case(OP_RESTAR):
-					st=op_restar(simpletron);
-					(*simpletron)->contador_programa++;
-					break;
-				case(OP_DIVIDIR):
-					st=op_dividir(simpletron);
-					(*simpletron)->contador_programa++;
-					break;
-				case(OP_MULTIPLICAR):
-					st=op_multiplicar(simpletron);
-					(*simpletron)->contador_programa++;
-					break;
-				case(OP_JMP):
-					st=op_jmp(simpletron);
-					break;
-				case(OP_JMPNEG):
-					if((*simpletron)->acumulador<0)
-						st=op_jmp(simpletron);
-					else
-						(*simpletron)->contador_programa++;
-					break;
-				case(OP_JMPZERO):
-					if((*simpletron)->acumulador==0)
-						st=op_jmp(simpletron);
-					else
-						(*simpletron)->contador_programa++;
-					break;
-				case(OP_JNZ):
-					if((*simpletron)->acumulador!=0)
-						st=op_jmp(simpletron);
-					else
-						(*simpletron)->contador_programa++;
-					break;
-				case(OP_DJNZ):
-					st=op_djnz(simpletron);
-					break;
-				case (OP_HALT):
-					st=ST_SALIR;
-					break;
-				default:
-					(*simpletron)->contador_programa++;
-					break;
-			}		
-		}
+		else
+			imprimir_error(ST_ERROR_FUERA_DE_RANGO);
 	}
+	else 
+		imprimir_error(ST_ERROR_FUERA_DE_RANGO);
+	}
+
 	if(st==ST_SALIR)
 		st=ST_OK;
 	return st;		
