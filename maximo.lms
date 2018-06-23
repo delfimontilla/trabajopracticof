@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 +1017 ; LEER en la posición de memoria 17
 +2018 ; CARGAR la posición de memoria 18 en el acumulador
 +3117 ; RESTAR al acumulador la posición de memoria 17
@@ -20,3 +21,27 @@
 +0000 ; Pos. 19 Variable D
 +0000 ; Pos. 20 Valor acumulado
 +0001 ; Pos. 21 Incrementos de a 1
+=======
++1017
++2018
++3117
++4215
++2018
++3021
++2118
++1019
++2020
++3119
++4112
++4001
++2019
++2120
++4001
++1120
++4500
++0000
++0000
++0000
++0000
++0001
+>>>>>>> 649781922d972b0116093f5694c3c998d53a4ee7
