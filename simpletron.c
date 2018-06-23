@@ -36,12 +36,19 @@ int main(int argc, char *argv[])
 
 
     if((st=validar_argumentos(argc, argv, &argumentos, &cant_palabras, &fentrada, &fsalida))!=ST_OK){
-    	fprintf(stderr, "%s\n", errmsg[st]);
-    	return EXIT_FAILURE;
+    	if (st=ST_AYUDA){
+    		imprimir_ayuda();
+    		return ST_OK;
+    	}
+
+    	else{
+    		imprimir_error(st)
+    		return EXIT_FAILURE;
+    	}	
     }
 
 	if((st=inicializar_simpletron(&simpletron, cant_palabras))!=ST_OK){
-		fprintf(stderr, "%s\n", errmsg[st]);
+		imprimir_error(st)
 		if(fentrada!=NULL)
         	fclose(fentrada);
     	if(fsalida!=NULL)
@@ -57,11 +64,10 @@ int main(int argc, char *argv[])
         		fclose(fentrada);
     		if(fsalida!=NULL)
 	   			fclose(fsalida);
-       		fprintf(stderr, "%s\n", errmsg[st]);
+       		imprimir_error(st)
    			return EXIT_FAILURE;
    		}
-   	}
-   	
+   	}   	
    	else if((st=leer_archivo_txt(&simpletron, argumentos, cant_palabras, fentrada))!=ST_OK){
        	free(simpletron);
        	simpletron=NULL;
@@ -69,7 +75,7 @@ int main(int argc, char *argv[])
         	fclose(fentrada);
     	if(fsalida!=NULL)
 	   		fclose(fsalida);
-       	fprintf(stderr, "%s\n", errmsg[st]);
+       	imprimir_error(st)
    		return EXIT_FAILURE;
    	}
 
@@ -80,7 +86,7 @@ int main(int argc, char *argv[])
     	    fclose(fentrada);
     	if(fsalida!=NULL)
 	   		fclose(fsalida);
-   		fprintf(stderr, "%s\n", errmsg[st]);
+   		imprimir_error(st)
    		return EXIT_FAILURE;
 	}
 
@@ -92,7 +98,7 @@ int main(int argc, char *argv[])
         		fclose(fentrada);
     		if(fsalida!=NULL)
 	   			fclose(fsalida);
-       		fprintf(stderr, "%s\n", errmsg[st]);
+       		imprimir_error(st)
    			return EXIT_FAILURE;
    		} 		
    	}
@@ -104,7 +110,7 @@ int main(int argc, char *argv[])
         	fclose(fentrada);
     	if(fsalida!=NULL)
 	   		fclose(fsalida);
-       	fprintf(stderr, "%s\n", errmsg[st]);
+       	imprimir_error(st)
    		return EXIT_FAILURE;
    	}
 
@@ -114,7 +120,7 @@ int main(int argc, char *argv[])
         	fclose(fentrada);
     	if(fsalida!=NULL)
 	   		fclose(fsalida);
-   		fprintf(stderr, "%s\n", errmsg[st]);
+   		imprimir_error(st)
    		return EXIT_FAILURE;
 	}
 	
@@ -126,59 +132,86 @@ int main(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, size_t *cant_palabras, FILE ** fentrada, FILE ** fsalida)
- /*recibe arc y argv para realizar las validacione correspondientes a su cantidad y contenido;
+status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, size_t *cant_palabras)
+ /*recibe arc y argv para realizar las validaciones correspondientes a su cantidad y contenido;
  además recibe el puntero a cant_palabras (cantidad de instrucciones) para cargarle su contenido
  y los dobles punteros al archivo de entrada para abrirlo en caso de ser necesario,
  y al archivo de salida para crearlo en caso de así especificarlo.*/
 {
-	char *pc;
-
-	pc=NULL;
+	char *pc=NULL;
 		
 	if(!argv|| !cant_palabras || !argumentos || !fentrada || !fsalida){
 		return ST_ERROR_PTR_NULO;
 	}
 
 	if(argc==ARGC_MIN){
-		if(!(strcmp(argv[ARG_POS_H],ARG_H))){
-			imprimir_ayuda();
+		if(!(strcmp(argv[ARG_POS_H],ARG_H)))
 			return ST_AYUDA;
-		}
 	}
 
-	if(argc!=ARGC_MAX)
-		return ST_ERROR_CANT_ARG;
-
-	else{
-	
-		if(!(strcmp(argv[ARG_POS_CANT_PALABRAS],ARG_VALIDO)))
-			*cant_palabras=CANT_PALABRAS_DEFAULT;
-
+	if(!(strcmp(argv[ARG_POS_CANT_PALABRAS],ARG_CANT_PALABRAS))){
+		*cant_palabras=CANT_PALABRAS_DEFAULT;
+		if(strcmp(argv[ARG_POS_FSALIDA1],ARG_FSALIDA)){
+			argumentos->f_txt=TRUE;
+			argumentos->f_bin=FALSE;
+			argumentos->inicio_arch=argv[ARG_POS_FENTRADA1];
+			return ST_OK;
+		}	
 		else {
-			*cant_palabras = strtol(argv[ARG_POS_CANT_PALABRAS], &pc, 10);
-			if(*cant_palabras< MIN_CANT_PALABRA || *pc!='\0' || *cant_palabras> MAX_CANT_PALABRA){
-				return ST_ERROR_CANT_PALABRAS;
-			}
+			if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_BIN))){
+				argumentos->f_txt=FALSE;
+				argumentos->f_bin=TRUE;
+				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
+				return ST_OK;
+			}	
+			if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_TXT))){
+				argumentos->f_txt=TRUE;
+				argumentos->f_bin=FALSE;
+				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
+				return ST_OK;
+			}	
 		}
+	}	
+
+	else {
+		*cant_palabras = strtol(argv[ARG_POS_CANT_PALABRAS_NUM], &pc, 10);
+		if(*cant_palabras< MIN_CANT_PALABRA || *pc!='\0' || *cant_palabras> MAX_CANT_PALABRA)
+			return ST_ERROR_CANT_PALABRAS;
 		
-		if((strcmp(argv[ARG_POS_FENTRADA_TIPO],ARG_VALIDO))!=0){
-			if(strcmp(argv[ARG_POS_FENTRADA_NOMBRE],ARG_VALIDO)==0){
+		if(!(strcmp(argv[ARG_POS_FSALIDA2],ARG_FSALIDA))){
+			argumentos->f_txt=TRUE;
+			argumentos->f_bin=FALSE;
+			argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
+			return ST_OK;
+		}	
+		else {
+			if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_BIN))){
+				argumentos->f_txt=FALSE;
+				argumentos->f_bin=TRUE;
+				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
+				return ST_OK;
+			}	
+			if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_TXT))){
+				argumentos->f_txt=TRUE;
+				argumentos->f_bin=FALSE;
+				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
+				return ST_OK;
+			}	
+}
+
+
+/*		if(!(strcmp(argv[ARG_POS_FENTRADA_TIPO],OPCION_TXT))){
+			if((*fentrada=fopen(argv[ARG_POS_FENTRADA_NOMBRE],"rt"))==NULL){
 				return ST_ERROR_APERTURA_ARCHIVO;
 			}
-
-			if(!(strcmp(argv[ARG_POS_FENTRADA_TIPO],OPCION_TXT))){
-				if((*fentrada=fopen(argv[ARG_POS_FENTRADA_NOMBRE],"rt"))==NULL){
-					return ST_ERROR_APERTURA_ARCHIVO;
+			argumentos->ia=argv[ARG_POS_FENTRADA_TIPO];
+		}
+				else if (!(strcmp(argv[ARG_POS_FENTRADA_TIPO],OPCION_BIN))){
+					if((*fentrada=fopen(argv[ARG_POS_FENTRADA_NOMBRE],"rb"))==NULL){
+						return ST_ERROR_APERTURA_ARCHIVO;
+					}
+					argumentos->ia=argv[ARG_POS_FENTRADA_TIPO];
 				}
-				argumentos->ia=argv[ARG_POS_FENTRADA_TIPO];
-			}
-			else if (!(strcmp(argv[ARG_POS_FENTRADA_TIPO],OPCION_BIN))){
-				if((*fentrada=fopen(argv[ARG_POS_FENTRADA_NOMBRE],"rb"))==NULL){
-					return ST_ERROR_APERTURA_ARCHIVO;
-				}
-				argumentos->ia=argv[ARG_POS_FENTRADA_TIPO];
-			}
 		}
 
 		else if (!(strcmp(argv[ARG_POS_FENTRADA_NOMBRE],OPCION_STDIN))){
@@ -214,7 +247,9 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 		else{
 			return ST_ERROR_ARG_INV;
 		}	
+	}*/
 	}
+
 	return ST_OK;
 }
 
@@ -383,6 +418,14 @@ status_t leer_archivo_txt(simpletron_t ** simpletron, parametros_t argumentos, s
 	return ST_OK;
 }
 
+status_t imprimir_error(status_t st)
+/*Imprime el error correspondiente*/
+{
+    fprintf(stderr, "%s\n", errmsg[st]);
+	return ST_OK;
+}
+
+
 status_t imprimir_ayuda()
  /*Imprime la información de ayuda: tabla del orden de los argumentos y
  tabla de las operaciones validas*/
@@ -392,7 +435,7 @@ status_t imprimir_ayuda()
 }
 
 
-status_t imprimir_archivo_txt(simpletron_t *simpletron, parametros_t argumentos, size_t cant_palabras, FILE *fsalida)
+status_t imprimir_archivo_txt(const simpletron_t *simpletron, parametros_t argumentos, size_t cant_palabras, FILE *fsalida)
  /*Recibe el puntero del archivo de salida y a la de simpletron para imprimir los datos guardados en el acumulador, 
  en el contador del programa, la ultima instruccion ejecutada, el ultimo opcode y operando, además de la lista de todas las palabras, en forma de matriz. 
  Esto se hara en un archivo txt o por stdout teniendo en cuenta lo guardado en la estructura de los argumentos*/
@@ -444,7 +487,7 @@ status_t imprimir_archivo_txt(simpletron_t *simpletron, parametros_t argumentos,
     return ST_OK;
 }
 
-status_t imprimir_archivo_bin (simpletron_t *simpletron, FILE *fsalida)
+status_t imprimir_archivo_bin (const simpletron_t *simpletron, FILE *fsalida)
  /*Recibe el puntero del archivo de salida y el de la estructura de la simpletron para imprimir los datos guardados en ella*/
 
 {
@@ -454,7 +497,7 @@ status_t imprimir_archivo_bin (simpletron_t *simpletron, FILE *fsalida)
 
 
 status_t liberar_memoria(simpletron_t ** simpletron)
-/*Recibe el puntero a la estructura de simpletron para liberar la memoria pedida*/
+/*Recibe puntero al simpletron para liberar la memoria pedida*/
 {	
 	if (simpletron!=NULL && *simpletron!=NULL){
 		free((*simpletron)->palabras);
