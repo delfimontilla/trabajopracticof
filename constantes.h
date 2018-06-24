@@ -27,6 +27,7 @@
 #define FMT_T "t"
 #define OPCION_BIN "bin"
 #define FMT_B "b"
+#define NOMBRE_SALIDA "dump"
 #define ARG_H "h"
 #define ARG_CANT_PALABRAS "-m"
 #define ARG_FSALIDA "-f"
@@ -42,7 +43,7 @@
 #define DELIM_COMA ';'
 #define DELIM_2PUNTOS ':'
 
-#define ARG_VALIDO "-"
+#define ARG_STDIN "-"
 
 #define TXT_AYUDA1 \
 		SALTO \
