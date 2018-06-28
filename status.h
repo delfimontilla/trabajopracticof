@@ -9,8 +9,8 @@ con los mensajes de los estados posibles*/
 
 typedef enum
 {
-	ST_OK,
-	ST_ERROR_PTR_NULO,
+	ST_OK,/*RV_SUCCESS*/
+	ST_ERROR_PTR_NULO,/*RV_ILLEGAL*/
 	ST_ERROR_CANT_ARG,
 	ST_ERROR_FUERA_DE_RANGO,
 	ST_ERROR_LECTURA,
