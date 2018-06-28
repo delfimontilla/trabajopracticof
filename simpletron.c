@@ -3,6 +3,12 @@
 #include <string.h>
 #include <ctype.h>
 
+
+
+/*hacer un array de punteros a funcion, struct{opcode_t op; void(*p) ();}   
+iterar con un arreglo de opcodes y un arreglo de estructuras*/
+
+
 #define LENG_ESPANOL /*elección del idioma del programa*/
 
 #ifdef LENG_ESPANOL
@@ -20,9 +26,12 @@
 #include "simpletron.h"
 #include "parametros.h"
 #include "prototipos.h"
+#include "tda_lista.h"
+#include "tda_lista_rec.c" /********/
 
 int main(int argc, char *argv[])
 {
+	lista_t lsimpletron;
 	simpletron_t * simpletron;
 	size_t cant_palabras; /*la cantidad de palabras que han sido asignadas en memoria para las instrucciones*/
 	parametros_t argumentos;
@@ -47,89 +56,116 @@ int main(int argc, char *argv[])
     	}	
     }
 
+    if((st=LISTA_crear(&lsimpletron)!=;/*falta validar*/
 
-	if((st=inicializar_simpletron(&simpletron, cant_palabras))!=ST_OK){
-		imprimir_error(st);
-		if(fentrada!=NULL)
-        	fclose(fentrada);
-    	if(fsalida!=NULL)
-	   		fclose(fsalida);
-   		return EXIT_FAILURE;
-   	}
+    while(inicio_arch!= NULL)
+    {
 
-   	if (argumentos.fmt_ent_stdin=FALSE){
-   		if((st=abrir_archivo_entrada(&argumentos, &fentrada))!=ST_OK){
-   			imprimir_error(st);
-   			return EXIT_FAILURE;
-   		}
-   	}
-
-   	if (argumentos.fmt_ent_bin==TRUE){
-		if((st=leer_archivo_bin(&simpletron, cant_palabras, fentrada))!=ST_OK){
-       		free(simpletron);
-       		simpletron=NULL;
-       		if(fentrada!=NULL)
-        		fclose(fentrada);
-    		if(fsalida!=NULL)
-	   			fclose(fsalida);
-       		imprimir_error(st);
-   			return EXIT_FAILURE;
-   		}
-   	}
-
-   	else{
-		if((st=leer_archivo_txt(&simpletron, argumentos, cant_palabras, fentrada))!=ST_OK){
-	       	free(simpletron);
-	       	simpletron=NULL;
-	       	if(fentrada!=NULL)
+		if((st=inicializar_simpletron(&simpletron, cant_palabras))!=ST_OK)
+		{
+			LISTA_destruir(&lsimpletron, /*funciondestruir*/);
+			imprimir_error(st);
+			if(fentrada!=NULL)
 	        	fclose(fentrada);
 	    	if(fsalida!=NULL)
 		   		fclose(fsalida);
-	       	imprimir_error(st);
 	   		return EXIT_FAILURE;
 	   	}
-	}   	
 
-   	if((st=ejecutar_simpletron(&simpletron, cant_palabras))!=ST_OK){
-   		free(simpletron);
-       	simpletron=NULL;
-   		if(fentrada!=NULL)
-    	    fclose(fentrada);
-    	if(fsalida!=NULL)
-	   		fclose(fsalida);
-   		imprimir_error(st);
-   		return EXIT_FAILURE;
+	   	if (argumentos.fmt_ent_stdin=FALSE)
+	    {
+	   		if((st=abrir_archivo_entrada(&argumentos, &fentrada))!=ST_OK)
+	   		{
+	   			LISTA_destruir(&lsimpletron, /*funciondestruir*/);
+	   			imprimir_error(st);
+	   			return EXIT_FAILURE;
+	   		}
+	   	}
+
+	   	if (argumentos.fmt_ent_bin==TRUE)
+	   	{
+			if((st=leer_archivo_bin(&simpletron, cant_palabras, fentrada))!=ST_OK)
+			{
+	       		free(simpletron);
+	       		simpletron=NULL;
+	       		LISTA_destruir(&lsimpletron, /*funciondestruir*/);
+	       		if(fentrada!=NULL)
+	        		fclose(fentrada);
+	    		if(fsalida!=NULL)
+		   			fclose(fsalida);
+	       		imprimir_error(st);
+	   			return EXIT_FAILURE;
+	   		}
+	   	}
+
+	   	else
+	   	{
+			if((st=leer_archivo_txt(&simpletron, argumentos, cant_palabras, fentrada))!=ST_OK)
+			{
+		       	free(simpletron);
+		       	simpletron=NULL;
+		       	if((st=LISTA_destruir(&lsimpletron, /*funciondestruir*/))!=ST_OK)
+     			{
+		     		if(fentrada!=NULL)
+	   				    fclose(fentrada);
+			   		if(fsalida!=NULL)
+	   					fclose(fsalida);
+					imprimir_error(st);
+					return EXIT_FAILURE;
+				}	
+		       	if(fentrada!=NULL)
+		        	fclose(fentrada);
+		    	if(fsalida!=NULL)
+			   		fclose(fsalida);
+		       	imprimir_error(st);
+		   		return EXIT_FAILURE;
+		   	}
+		} 
+	   	LISTA_crear_nodo(&lsimpletron,simpletron);
+	   	inicio_arch++;
 	}
 
-   	if((st=abrir_archivo_salida(&argumentos, &fsalida))!=ST_OK){
+ 	if((st=LISTA_recorrer(lsimpletron, &ejecutar_simpletron(), &cant_palabras))!=ST_OK)
+ 	{
+   		free(simpletron);
+    	simpletron=NULL;
+     	if((st=LISTA_destruir(&lsimpletron, /*funciondestruir*/))!=ST_OK)
+     	{
+     		if(fentrada!=NULL)
+	   		    fclose(fentrada);
+	   		if(fsalida!=NULL)
+	   			fclose(fsalida);
+			imprimir_error(st);
+			return EXIT_FAILURE;
+     	}
+   		if(fentrada!=NULL)
+	   	    fclose(fentrada);
+	   	if(fsalida!=NULL)
+	   		fclose(fsalida);
+		imprimir_error(st);
+	   		return EXIT_FAILURE;
+		}
+
+	}	
+
+
+
+   	if((st=abrir_archivo_salida(&argumentos, &fsalida))!=ST_OK)
+   	{
    		imprimir_error(st);
    		return EXIT_FAILURE;
    	}
 
-   	if (argumentos.fmt_sal_bin==TRUE){
-		if((st=imprimir_archivo_bin(simpletron, fsalida))!=ST_OK){
-       		free(simpletron);
-       		simpletron=NULL;
-       		if(fentrada!=NULL)
-        		fclose(fentrada);
-    		if(fsalida!=NULL)
-	   			fclose(fsalida);
-       		imprimir_error(st);
-   			return EXIT_FAILURE;
-   		} 		
-   	}
-
-   	else {
-   		if((st=imprimir_archivo_txt(simpletron, argumentos, cant_palabras, fsalida))!=ST_OK){
-	       	free(simpletron);
-	       	simpletron=NULL;
-	       	if(fentrada!=NULL)
-	        	fclose(fentrada);
-	    	if(fsalida!=NULL)
-		   		fclose(fsalida);
-	       	imprimir_error(st);
-	   		return EXIT_FAILURE;
-	   	}	
+	if((st=LISTA_imprimir(lsimpletron, fsalida, impresor)!=ST_OK)
+   	{
+   		free(simpletron);
+  		simpletron=NULL;
+   		if(fentrada!=NULL)
+      		fclose(fentrada);
+   		if(fsalida!=NULL)
+	 		fclose(fsalida);
+      	imprimir_error(st);
+   		return EXIT_FAILURE;
    	}
 
 
@@ -271,7 +307,7 @@ y un size_t de cant_palabras para darle la memoria dinamica necesaria al vector 
 		return ST_ERROR_NO_MEM;
 	}
 	
-	if(((*simpletron)->palabras = (palabra_t *) malloc(cant_palabras*(sizeof(palabra_t))))==NULL){
+	if(((*simpletron)->memoria = (memoria_t *) malloc(cant_palabras*(sizeof(memoria_t))))==NULL){
 		free(*simpletron);
 		*simpletron=NULL;
 		return ST_ERROR_NO_MEM;
@@ -559,8 +595,8 @@ status_t liberar_memoria(simpletron_t ** simpletron)
 /*Recibe puntero al simpletron para liberar la memoria pedida*/
 {	
 	if (simpletron!=NULL && *simpletron!=NULL){
-		free((*simpletron)->palabras);
-		(*simpletron)->palabras=NULL;
+		free((*simpletron)->memoria);
+		(*simpletron)->memoria=NULL;
 		(*simpletron)->acumulador=0;
 		(*simpletron)->contador_programa=0;
 		(*simpletron)->opcode=0;
@@ -571,7 +607,7 @@ status_t liberar_memoria(simpletron_t ** simpletron)
 	return ST_OK;
 }
 
-status_t ejecutar_simpletron (simpletron_t * simpletron, size_t cant_palabras)
+status_t ejecutar_simpletron (void * simpletron, void * cant_palabras)
  /*Recibe el puntero a la estructura de simpletron para hacer un análisis de las instrucciones que se encuentran
  en el vector palabras, y después se llama a una función que realiza la operación necesaria. 
  Ademas, se valida que el operando sea una posicion de memoria existente*/
@@ -582,8 +618,8 @@ status_t ejecutar_simpletron (simpletron_t * simpletron, size_t cant_palabras)
 
 	while(st==ST_OK){
 		if((simpletron->palabras)>0){	
-			if(0<(simpletron->opcode=simpletron->palabras[simpletron->contador_programa]/10000) && simpletron->opcode<MAX_CANT_OPCODE){
-				if(0<(simpletron->operando=(simpletron->palabras)-(simpletron->opcode)*10000) && simpletron->operando<MAX_CANT_OPERANDO){	
+			/*if(0<(simpletron->opcode=simpletron->palabras[simpletron->contador_programa]/10000) && simpletron->opcode<MAX_CANT_OPCODE)*/{/*
+				if(0<(simpletron->operando=(simpletron->palabras)-(simpletron->opcode)*10000) && simpletron->operando<MAX_CANT_OPERANDO)***************ESTO SIRVE PARA VALIDAR LA ENTRADA CUANDO SE PARA A MEMORIA>>>>> CUANDO VENIMOS A EJECUTAR SIMPLETRON HAGO MASCARAS*/{	
 
 					switch ((*simpletron)->opcode){
 						case (OP_LEER):

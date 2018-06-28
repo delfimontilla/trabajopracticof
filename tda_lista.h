@@ -29,42 +29,24 @@
 #define TDA_LISTA__H
 
 #include <stdio.h>
-#include "../lib/types.h"
-/* en types.h están definidos los tipos:
-typedef enum retval {
-  RV_SUCCESS = 0,
-  RV_ILLEGAL = 1,
-  RV_NOSPACE = 2,
-  RV_ERROR = 3,
-  RV_NOTIMPLEMENTED = 4,
-  RV_MISSING_ARGS = 5
-} retval_t;
-
-typedef enum bool {
-  false = 0,
-  true = 1
-} bool_t;
-
-¿conviene utilizar lst_retval_t en lugar de retval_t?
-*/
-
+ 
 typedef struct nodo {
   struct nodo * siguiente;
-  void * dato;
+  void * simpletron;
 } nodo_t, * lista_t;
 
 bool_t LISTA_esta_vacia(lista_t);
-retval_t LISTA_crear(lista_t *);
-retval_t LISTA_crear_nodo(nodo_t ** , void *);
-retval_t LISTA_destruir_nodo(nodo_t **, retval_t (*destructor_dato)(void *));
-retval_t LISTA_destruir(lista_t *, retval_t (*destructor_dato)(void *));
-retval_t LISTA_insertar_al_ppio(lista_t *, void *);
-retval_t LISTA_insertar_al_final(lista_t *, void *);
-retval_t LISTA_insertar_decreciente(lista_t *, void *, int (*cmp)(void *, void *));
+status_t LISTA_crear(lista_t *);
+status_t LISTA_crear_nodo(nodo_t ** , void *);
+status_t LISTA_destruir_nodo(nodo_t **, status_t (*destructor_dato)(void *));
+status_t LISTA_destruir(lista_t *, status_t (*destructor_dato)(void *));
+status_t LISTA_insertar_al_ppio(lista_t *, void *);
+status_t LISTA_insertar_al_final(lista_t *, void *);
+status_t LISTA_insertar_decreciente(lista_t *, void *, int (*cmp)(void *, void *));
 
 void * LISTA_buscar(nodo_t *, void *, int (*cmp)(void *, void *));
-retval_t LISTA_imprimir(lista_t, FILE *, retval_t (*impresor)(void *, FILE *));
-retval_t LISTA_recorrer(lista_t, retval_t (*pf)(void *, void *), void *);
-retval_t LISTA_filtrar(lista_t, lista_t *, bool_t (*filtro)(void *));
+status_t LISTA_imprimir(lista_t, FILE *, status_t (*impresor)(void *, FILE *));
+status_t LISTA_recorrer(lista_t, status_t (*pf)(void *, void *), void *);
+status_t LISTA_filtrar(lista_t, lista_t *, bool_t (*filtro)(void *));
 
 #endif

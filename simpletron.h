@@ -30,13 +30,19 @@ typedef enum opcode
 	OP_HALT = 45
 }opcode_t;
 
+typedef struct memoria{
+	size_t pedido; 
+	palabra_t * palabras;
+} memoria_t;
+
 typedef struct estado
 {
-	palabra_t acumulador;/*posicion de memoria del acumulador*/
+ 	memoria_t * memoria;/*vector donde estan guardadas las palabras*/
+	palabra_t acumulador;/*cantidad guardada en el acumulador*/
 	size_t contador_programa;/*cuenta el numero de paso y de memoria que se encuentra el programa*/
-    palabra_t *palabras;/*vector donde estan guardadas las palabras*/
     size_t opcode; /*el codigo de operacion, que especifica la operación a realizar*/
     size_t operando; /*represeta la dirección de memoria que contiene la palabra a la que se le aplica la operación*/
 }simpletron_t; /*una estructura para almacenar el estado del Simpletron*/
+
 
 #endif

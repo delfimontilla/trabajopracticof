@@ -13,8 +13,6 @@
  * ---------------------------------------------------------------------------
  */
 #include <stdlib.h>
-#include "../lib/types.h"
-#include "tda_lista.h"
 
 bool_t LISTA_esta_vacia(lista_t lista) {
     return lista == NULL;
