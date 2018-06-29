@@ -4,11 +4,6 @@
 #include <ctype.h>
 
 
-
-/*hacer un array de punteros a funcion, struct{opcode_t op; void(*p) ();}   
-iterar con un arreglo de opcodes y un arreglo de estructuras*/
-
-
 #define LENG_ESPANOL /*elección del idioma del programa*/
 
 #ifdef LENG_ESPANOL
@@ -27,7 +22,7 @@ iterar con un arreglo de opcodes y un arreglo de estructuras*/
 #include "parametros.h"
 #include "prototipos.h"
 #include "tda_lista.h"
-#include "tda_lista_rec.c" /********/
+#include "tda_lista_rec.c"
 
 int main(int argc, char *argv[])
 {
@@ -44,67 +39,94 @@ int main(int argc, char *argv[])
     fsalida=NULL;
 
 
-    if((st=validar_argumentos(argc, argv, &argumentos, &cant_palabras))!=ST_OK){
-    	if (st==ST_AYUDA){
+    if((st=validar_argumentos(argc, argv, &argumentos, &cant_palabras))!=ST_OK)
+    {
+    	if (st==ST_AYUDA)
+    	{
     		imprimir_ayuda(st);
     		return ST_OK;
     	}
-
-    	else{
+    	else
+    	{
     		imprimir_error(st);
     		return EXIT_FAILURE;
     	}	
     }
-
-    if((st=LISTA_crear(&lsimpletron)!=;/*falta validar*/
-
-    while(inicio_arch!= NULL)
+    if((st=LISTA_crear(&lsimpletron))!=ST_OK)
     {
-
+    	imprimir_error(st);
+    	return EXIT_FAILURE;
+    }
+    while(argumentos.inicio_arch!= NULL)
+    {
 		if((st=inicializar_simpletron(&simpletron, cant_palabras))!=ST_OK)
 		{
-			LISTA_destruir(&lsimpletron, /*funciondestruir*/);
-			imprimir_error(st);
+     		imprimir_error(st);
+     		if((st=LISTA_destruir(&lsimpletron, liberar_memoria(&simpletron)))!=ST_OK)
+     		{
+ 		    	if(fentrada!=NULL)
+	   			    fclose(fentrada);
+			   	if(fsalida!=NULL)
+	   				fclose(fsalida);
+				imprimir_error(st);
+				return EXIT_FAILURE;
+     		}
 			if(fentrada!=NULL)
 	        	fclose(fentrada);
 	    	if(fsalida!=NULL)
 		   		fclose(fsalida);
 	   		return EXIT_FAILURE;
 	   	}
-
-	   	if (argumentos.fmt_ent_stdin=FALSE)
+	   	if (argumentos.fmt_ent_stdin=false)
 	    {
 	   		if((st=abrir_archivo_entrada(&argumentos, &fentrada))!=ST_OK)
 	   		{
-	   			LISTA_destruir(&lsimpletron, /*funciondestruir*/);
-	   			imprimir_error(st);
+   	   			imprimir_error(st);
+   	   			free(simpletron);
+		       	simpletron=NULL;
+     			if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
+     			{
+ 		    		if(fentrada!=NULL)
+	   				    fclose(fentrada);
+			   		if(fsalida!=NULL)
+	   					fclose(fsalida);
+					imprimir_error(st);
+					return EXIT_FAILURE;
+     			}
 	   			return EXIT_FAILURE;
 	   		}
 	   	}
-
-	   	if (argumentos.fmt_ent_bin==TRUE)
+	   	if (argumentos.fmt_ent_bin==true)
 	   	{
-			if((st=leer_archivo_bin(&simpletron, cant_palabras, fentrada))!=ST_OK)
+			if((st=leer_archivo_bin(&simpletron, fentrada))!=ST_OK)
 			{
+	       		imprimir_error(st);
 	       		free(simpletron);
 	       		simpletron=NULL;
-	       		LISTA_destruir(&lsimpletron, /*funciondestruir*/);
+		     	if((st=LISTA_destruir(&lsimpletron, liberar_memoria(&simpletron)))!=ST_OK)
+     			{
+  			   		if(fentrada!=NULL)
+	   				    fclose(fentrada);
+			   		if(fsalida!=NULL)
+	   					fclose(fsalida);
+					imprimir_error(st);
+					return EXIT_FAILURE;
+     			}
 	       		if(fentrada!=NULL)
 	        		fclose(fentrada);
 	    		if(fsalida!=NULL)
 		   			fclose(fsalida);
-	       		imprimir_error(st);
 	   			return EXIT_FAILURE;
 	   		}
 	   	}
-
 	   	else
 	   	{
-			if((st=leer_archivo_txt(&simpletron, argumentos, cant_palabras, fentrada))!=ST_OK)
+			if((st=leer_archivo_txt(&simpletron, argumentos, fentrada))!=ST_OK)
 			{
+		       	imprimir_error(st);
 		       	free(simpletron);
 		       	simpletron=NULL;
-		       	if((st=LISTA_destruir(&lsimpletron, /*funciondestruir*/))!=ST_OK)
+		       	if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
      			{
 		     		if(fentrada!=NULL)
 	   				    fclose(fentrada);
@@ -117,19 +139,33 @@ int main(int argc, char *argv[])
 		        	fclose(fentrada);
 		    	if(fsalida!=NULL)
 			   		fclose(fsalida);
-		       	imprimir_error(st);
+
 		   		return EXIT_FAILURE;
 		   	}
 		} 
-	   	LISTA_crear_nodo(&lsimpletron,simpletron);
-	   	inicio_arch++;
-	}
+	   	if((st=LISTA_crear_nodo(&lsimpletron,simpletron))!=ST_OK)
+	   	{
+	   		imprimir_error(st);
+	   		free(simpletron);
+		   	simpletron=NULL;
+	   		if((st=LISTA_destruir(&lsimpletron, liberar_memoria(&simpletron)))!=ST_OK)
+  			{
+ 		   		if(fentrada!=NULL)
+   				    fclose(fentrada);
+		   		if(fsalida!=NULL)
+   					fclose(fsalida);
+				imprimir_error(st);
+				return EXIT_FAILURE;
+     		}
+	   	}
 
- 	if((st=LISTA_recorrer(lsimpletron, &ejecutar_simpletron(), &cant_palabras))!=ST_OK)
+	   	argumentos.inicio_arch++;
+	}
+ 	if((st=LISTA_recorrer(lsimpletron, ejecutar_simpletron(simpletron))!=ST_OK)
  	{
    		free(simpletron);
     	simpletron=NULL;
-     	if((st=LISTA_destruir(&lsimpletron, /*funciondestruir*/))!=ST_OK)
+     	if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
      	{
      		if(fentrada!=NULL)
 	   		    fclose(fentrada);
@@ -144,18 +180,12 @@ int main(int argc, char *argv[])
 	   		fclose(fsalida);
 		imprimir_error(st);
 	   		return EXIT_FAILURE;
-		}
-
 	}	
-
-
-
    	if((st=abrir_archivo_salida(&argumentos, &fsalida))!=ST_OK)
    	{
    		imprimir_error(st);
    		return EXIT_FAILURE;
    	}
-
 	if((st=LISTA_imprimir(lsimpletron, fsalida, impresor)!=ST_OK)
    	{
    		free(simpletron);
@@ -167,16 +197,15 @@ int main(int argc, char *argv[])
       	imprimir_error(st);
    		return EXIT_FAILURE;
    	}
-
-
-   	if((st=liberar_memoria(&simpletron))!=ST_OK){
+   	if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
+  	{
    		if(fentrada!=NULL)
-        	fclose(fentrada);
-    	if(fsalida!=NULL)
-	   		fclose(fsalida);
-   		imprimir_error(st);
-   		return EXIT_FAILURE;
-	}
+   		    fclose(fentrada);
+   		if(fsalida!=NULL)
+   			fclose(fsalida);
+		imprimir_error(st);
+		return EXIT_FAILURE;
+    }
 	
 	if(fentrada!=NULL)
         fclose(fentrada);
@@ -206,36 +235,36 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 	if(strcmp(argv[ARG_POS_CANT_PALABRAS],ARG_CANT_PALABRAS)){
 		*cant_palabras=CANT_PALABRAS_DEFAULT;
 		if(strcmp(argv[ARG_POS_FSALIDA1],ARG_FSALIDA)){
-			argumentos->fmt_sal_txt=TRUE;
-			argumentos->fmt_sal_bin=FALSE;
+			argumentos->fmt_sal_txt=true;
+			argumentos->fmt_sal_bin=false;
 			if (!(strcmp(argv[ARG_POS_FENTRADA1], ARG_STDIN))){
-				argumentos->fmt_ent_stdin=TRUE;
+				argumentos->fmt_ent_stdin=true;
 				argumentos->nombre_arch=NOMBRE_SALIDA;
 			}	
 			else {
-				argumentos->fmt_ent_stdin=FALSE;
+				argumentos->fmt_ent_stdin=false;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA1];
 			}	
 			return ST_OK;
 		}	
 		else {
 			if (!(strcmp(argv[ARG_POS_FENTRADA2], ARG_STDIN))){
-				argumentos->fmt_ent_stdin=TRUE;
+				argumentos->fmt_ent_stdin=true;
 				argumentos->nombre_arch=NOMBRE_SALIDA;
 			}	
 			else {
-				argumentos->fmt_ent_stdin=FALSE;
+				argumentos->fmt_ent_stdin=false;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
 			}	
 			if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_BIN))){
-				argumentos->fmt_sal_txt=FALSE;
-				argumentos->fmt_sal_bin=TRUE;
+				argumentos->fmt_sal_txt=false;
+				argumentos->fmt_sal_bin=true;
 				return ST_OK;
 			}	
 			else if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_TXT))){
-				argumentos->fmt_sal_txt=TRUE;
-				argumentos->fmt_sal_bin=FALSE;
-\				return ST_OK;
+				argumentos->fmt_sal_txt=true;
+				argumentos->fmt_sal_bin=false;
+				return ST_OK;
 			}	
 		}
 	}	
@@ -246,41 +275,41 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 			return ST_ERROR_CANT_PALABRAS;
 		
 		if(strcmp(argv[ARG_POS_FSALIDA2],ARG_FSALIDA)){
-			argumentos->fmt_sal_txt=TRUE;
-			argumentos->fmt_sal_bin=FALSE;
+			argumentos->fmt_sal_txt=true;
+			argumentos->fmt_sal_bin=false;
 			if (!(strcmp(argv[ARG_POS_FENTRADA2], ARG_STDIN))){
-				argumentos->fmt_ent_stdin=TRUE;
+				argumentos->fmt_ent_stdin=true;
 				argumentos->nombre_arch=NOMBRE_SALIDA;
 			}	
 			else {
-				argumentos->fmt_ent_stdin=FALSE;
+				argumentos->fmt_ent_stdin=false;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
 			}	
 			return ST_OK;
 		}	
 		else {
 			if(!(strcmp(argv[ARG_POS_FSALIDA2_TIPO],OPCION_BIN))){
-				argumentos->fmt_sal_txt=FALSE;
-				argumentos->fmt_sal_bin=TRUE;
+				argumentos->fmt_sal_txt=false;
+				argumentos->fmt_sal_bin=true;
 				if (!(strcmp(argv[ARG_POS_FENTRADA3], ARG_STDIN))){
-					argumentos->fmt_ent_stdin=TRUE;
+					argumentos->fmt_ent_stdin=true;
 					argumentos->nombre_arch=NOMBRE_SALIDA;
 				}	
 				else {
-					argumentos->fmt_ent_stdin=FALSE;
+					argumentos->fmt_ent_stdin=false;
 					argumentos->inicio_arch=argv[ARG_POS_FENTRADA3];
 				}	
 				return ST_OK;
 			}	
 			if(!(strcmp(argv[ARG_POS_FSALIDA2_TIPO],OPCION_TXT))){
-				argumentos->fmt_sal_txt=TRUE;
-				argumentos->fmt_sal_bin=FALSE;				
+				argumentos->fmt_sal_txt=true;
+				argumentos->fmt_sal_bin=false;				
 				if (!(strcmp(argv[ARG_POS_FENTRADA3], ARG_STDIN))){
-					argumentos->fmt_ent_stdin=TRUE;
+					argumentos->fmt_ent_stdin=true;
 					argumentos->nombre_arch=NOMBRE_SALIDA;
 				}	
 				else {
-					argumentos->fmt_ent_stdin=FALSE;
+					argumentos->fmt_ent_stdin=false;
 					argumentos->inicio_arch=argv[ARG_POS_FENTRADA3];
 				}	
 				return ST_OK;
@@ -295,24 +324,23 @@ status_t inicializar_simpletron (simpletron_t **simpletron, size_t cant_palabras
 /*Esta funcion recibe un doble puntero a la estructura simpletron para poder modificar su contenido, 
 y un size_t de cant_palabras para darle la memoria dinamica necesaria al vector de palabras*/	
 {
-	if (!simpletron){
+	if (!simpletron)
+	{
 		return ST_ERROR_PTR_NULO;
 	}	
-
-	if(!cant_palabras){
+	if(!cant_palabras)
+	{
 		return ST_ERROR_NADA_QUE_CARGAR;
 	}	
-
-	if((*simpletron = (simpletron_t *) calloc(1, sizeof(simpletron_t)))==NULL){
+	if((*simpletron = (simpletron_t *) calloc(1, sizeof(simpletron_t)))==NULL)
+	{
+		return ST_ERROR_NO_MEM;
+	}	
+	if(((*simpletron)->memoria=vector_crear(cant_palabras))==NULL)
+	{
+		liberar_memoria(simpletron);
 		return ST_ERROR_NO_MEM;
 	}
-	
-	if(((*simpletron)->memoria = (memoria_t *) malloc(cant_palabras*(sizeof(memoria_t))))==NULL){
-		free(*simpletron);
-		*simpletron=NULL;
-		return ST_ERROR_NO_MEM;
-	}
-
 	(*simpletron)->acumulador=0;
 	(*simpletron)->contador_programa=0;
 	(*simpletron)->opcode=0;
@@ -335,16 +363,16 @@ status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada){
    	if((fin=strrchr(aux,DELIM_2PUNTOS))!=NULL){
 		*fin='\0';
 		if(!(strcmp(aux,FMT_T))){
-			argumentos->fmt_ent_txt=TRUE;
-			argumentos->fmt_ent_bin=FALSE;
+			argumentos->fmt_ent_txt=true;
+			argumentos->fmt_ent_bin=false;
 			if((*fentrada=fopen(argumentos->nombre_arch,"rt"))==NULL){
 				return ST_ERROR_APERTURA_ARCHIVO;
 			}
 		}	
 
 		if(!(strcmp(aux,FMT_B))){
-			argumentos->fmt_ent_bin=TRUE;
-			argumentos->fmt_ent_txt=FALSE;
+			argumentos->fmt_ent_bin=true;
+			argumentos->fmt_ent_txt=false;
 			if((*fentrada=fopen(argumentos->nombre_arch,"rb"))==NULL){
 				return ST_ERROR_APERTURA_ARCHIVO;
 			}
@@ -353,8 +381,8 @@ status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada){
 	
 	else{
 		argumentos->nombre_arch=argumentos->inicio_arch;
-		argumentos->fmt_ent_txt=TRUE;
-		argumentos->fmt_ent_bin=FALSE;
+		argumentos->fmt_ent_txt=true;
+		argumentos->fmt_ent_bin=false;
 		if((*fentrada=fopen(argumentos->nombre_arch,"rt"))==NULL){
 			return ST_ERROR_APERTURA_ARCHIVO;
 		}	
@@ -376,7 +404,7 @@ status_t abrir_archivo_salida (parametros_t * argumentos, FILE ** fsalida){
 }
 
 
-status_t leer_archivo_bin (simpletron_t ** simpletron, size_t cant_palabras, FILE *fentrada)
+status_t leer_archivo_bin (simpletron_t ** simpletron, FILE *fentrada)
  /*recibe el puntero doble a la estructura de simpletron para cargar las instrucciones en el vector palabras, 
  para lo cual necesita la cantidad total de instrucciones (cant_palabras); ademas recibe el puntero
  al archivo de entrada para poder leer los datos*/
@@ -385,7 +413,7 @@ status_t leer_archivo_bin (simpletron_t ** simpletron, size_t cant_palabras, FIL
 	palabra_t instruccion;
 
 	instruccion = 0;
- 	for(i=0; i<cant_palabras; i++){
+ 	for(i=0; i<simpletron->memoria->pedido; i++){
     	if(fread(&instruccion,sizeof(palabra_t),1,fentrada)!=1){
     		return ST_ERROR_LECTURA;
     	}
@@ -399,7 +427,7 @@ status_t leer_archivo_bin (simpletron_t ** simpletron, size_t cant_palabras, FIL
  	return ST_OK;
 }
 
-status_t leer_archivo_txt(simpletron_t ** simpletron, parametros_t argumentos, size_t cant_palabras ,FILE *fentrada)
+status_t leer_archivo_txt(simpletron_t ** simpletron, parametros_t * argumentos,FILE *fentrada)
  /*Recibe el puntero doble a la estructura de simpletron para cargar las instrucciones en el vector palabras,
  la estructura de los argumentos para determinar desde donde se leeran los datos y el puntero al archivo de entrada.
  Tambien se necesita el valor de cant_palabras (cantidad de instrucciones).*/
@@ -412,9 +440,9 @@ status_t leer_archivo_txt(simpletron_t ** simpletron, parametros_t argumentos, s
 
 	instruccion = 0;
 
-	if (!(strcmp(argumentos.ia,OPCION_TXT))){
+	if (!(strcmp(argumentos->ia,OPCION_TXT))){
 
- 		for(i=0; i<cant_palabras;i++){
+ 		for(i=0; i<simpletron->memoria->pedido;i++){
 
 	    	if(fgets(aux,MAX_CADENA,fentrada)==NULL){
 	    		liberar_memoria(simpletron);
@@ -462,10 +490,10 @@ status_t leer_archivo_txt(simpletron_t ** simpletron, parametros_t argumentos, s
 		return ST_OK;
 	}
 
-	else if (!(strcmp(argumentos.i,OPCION_STDIN))){
+	else if (!(strcmp(argumentos->i,OPCION_STDIN))){
  		printf("%s\n",MSJ_BIENVENIDA);
 		
-		for(i=0; i<cant_palabras;i++){
+		for(i=0; i<simpletron->memoria->pedido;i++){
  		
  			printf("%2.i %s \n", i,PREGUNTA);
  	    	if(fgets(aux,MAX_CADENA,stdin)==NULL){
@@ -530,55 +558,34 @@ status_t imprimir_ayuda()
 }
 
 
-status_t imprimir_archivo_txt(const simpletron_t *simpletron, parametros_t argumentos, size_t cant_palabras, FILE *fsalida)
+status_t imprimir_archivo_txt(const simpletron_t *simpletron, parametros_t argumentos, FILE *fsalida)
  /*Recibe el puntero del archivo de salida y a la de simpletron para imprimir los datos guardados en el acumulador, 
  en el contador del programa, la ultima instruccion ejecutada, el ultimo opcode y operando, además de la lista de todas las palabras, en forma de matriz. 
  Esto se hara en un archivo txt o por stdout teniendo en cuenta lo guardado en la estructura de los argumentos*/
 {
 	int i,l;
 
-	if (!(strcmp(argumentos.oa,OPCION_TXT))){
+    if (!simpletron){
     	fprintf(fsalida,"%s\n", MSJ_REGISTRO);
 		fprintf(fsalida, "%25s: %6d\n",MSJ_ACUM, simpletron->acumulador );
 		fprintf(fsalida, "%25s: %6lu\n",MSJ_CONT_PROG, simpletron->contador_programa );
-		fprintf(fsalida, "%25s: %6d\n",MSJ_INST, simpletron->palabras[simpletron->contador_programa] );
-		simpletron->opcode = simpletron->palabras[simpletron->contador_programa] /100;/*divido por 100 entonces como es un int borra los numeros despues de la coma y me queda el entero que quiero (ejemplo, si llega 2598 me queda 25.98 pero se guarda 25)*/
-		simpletron->operando = simpletron->palabras[simpletron->contador_programa] - (simpletron->opcode*100);/*necesito los ultimos dos entonces al multiplicar opcode por 100 tengo 2500 del ejemplo entonces 2598-2500 da 98 que son los ultimos dos digitos que necesito*/
+		fprintf(fsalida, "%25s: %6d\n",MSJ_INST, simpletron->memoria->palabras[simpletron->contador_programa] );
+		simpletron->opcode = simpletron->memoria->palabras[simpletron->contador_programa] /100;/*divido por 100 entonces como es un int borra los numeros despues de la coma y me queda el entero que quiero (ejemplo, si llega 2598 me queda 25.98 pero se guarda 25)*/
+		simpletron->operando = simpletron->memoria->palabras[simpletron->contador_programa] - (simpletron->opcode*100);/*necesito los ultimos dos entonces al multiplicar opcode por 100 tengo 2500 del ejemplo entonces 2598-2500 da 98 que son los ultimos dos digitos que necesito*/
 		fprintf(fsalida, "%25s: %6lu\n",MSJ_OPCODE, simpletron->opcode );
 		fprintf(fsalida, "%25s: %6lu\n",MSJ_OPERANDO, simpletron->operando );
 		fprintf(fsalida,"    ");
 		for (l = 0; l < 10; l++)
 			fprintf(fsalida,"  %i   ",l) ;
-		for ( i = 0; i < cant_palabras ; i++){ 
+		for ( i = 0; i < simpletron->memoria->pedido ; i++){ 
       		if ((i%10)==0){
 		  		fprintf(fsalida,"\n%02i  ",i);
 	  		}		  
-			fprintf(fsalida,"%+05i ",simpletron->palabras[i] );
+			fprintf(fsalida,"%+05i ",simpletron->memoria->palabras[i] );
 		}
     	fprintf(fsalida,"\n");
     }
 
-    else if (!(strcmp(argumentos.o,OPCION_STDOUT))){
-    	printf("%s\n", MSJ_REGISTRO);
-		printf("%25s: %6i\n",MSJ_ACUM, simpletron->acumulador );
-		printf("%25s: %6lu\n",MSJ_CONT_PROG, simpletron->contador_programa );
-		printf("%25s: %6i\n",MSJ_INST, simpletron->palabras[simpletron->contador_programa] );	
-		simpletron->opcode = *(simpletron->palabras + simpletron->contador_programa) /100;/*divido por 100 entonces como es un int borra los numeros despues de la coma y me queda el entero que quiero (ejemplo, si llega 2598 me queda 25.98 pero se guarda 25)*/
-		simpletron->operando = simpletron->palabras[simpletron->contador_programa] - (simpletron->opcode*100);/*necesito los ultimos dos entonces al multiplicar opcode por 100 tengo 2500 del ejemplo entonces 2598-2500 da 98 que son los ultimos dos digitos que necesito*/
-		printf("%25s: %6lu\n",MSJ_OPCODE, simpletron->opcode );
-		printf("%25s: %6lu\n",MSJ_OPERANDO, simpletron->operando );
-		printf("    ");
-		for (l = 0; l < 10; l++)
-			printf("  %i   ",l) ;
-		for ( i = 0; i < cant_palabras ; i++){
-      		if ((i%10)==0){
-		  		printf("\n%02i  ",i);
-	  		}	  
-			printf("%+05i ",simpletron->palabras[i] );
-		}
-    	printf("\n");
-    }
-	
     return ST_OK;
 }
 
@@ -594,7 +601,13 @@ status_t imprimir_archivo_bin (const simpletron_t *simpletron, FILE *fsalida)
 status_t liberar_memoria(simpletron_t ** simpletron)
 /*Recibe puntero al simpletron para liberar la memoria pedida*/
 {	
+	
 	if (simpletron!=NULL && *simpletron!=NULL){
+		if (simpletron->memoria->palabras!=NULL)
+		{	
+			free((*simpletron)->memoria->palabras);
+			(*simpletron)->memoria->palabras=NULL;
+		}
 		free((*simpletron)->memoria);
 		(*simpletron)->memoria=NULL;
 		(*simpletron)->acumulador=0;
@@ -607,238 +620,218 @@ status_t liberar_memoria(simpletron_t ** simpletron)
 	return ST_OK;
 }
 
-status_t ejecutar_simpletron (void * simpletron, void * cant_palabras)
+status_t ejecutar_simpletron (simpletron_t * simpletron)
  /*Recibe el puntero a la estructura de simpletron para hacer un análisis de las instrucciones que se encuentran
  en el vector palabras, y después se llama a una función que realiza la operación necesaria. 
  Ademas, se valida que el operando sea una posicion de memoria existente*/
 {
-	status_t st;
-
-	st=ST_OK;
-
-	while(st==ST_OK){
-		if((simpletron->palabras)>0){	
-			/*if(0<(simpletron->opcode=simpletron->palabras[simpletron->contador_programa]/10000) && simpletron->opcode<MAX_CANT_OPCODE)*/{/*
-				if(0<(simpletron->operando=(simpletron->palabras)-(simpletron->opcode)*10000) && simpletron->operando<MAX_CANT_OPERANDO)***************ESTO SIRVE PARA VALIDAR LA ENTRADA CUANDO SE PARA A MEMORIA>>>>> CUANDO VENIMOS A EJECUTAR SIMPLETRON HAGO MASCARAS*/{	
-
-					switch ((*simpletron)->opcode){
-						case (OP_LEER):
-							st=op_leer(simpletron);
-							(*simpletron)->contador_programa++;
-							break;
-						case (OP_ESCRIBIR):
-							st=op_escribir(simpletron);
-							(*simpletron)->contador_programa++;
-							break;
-						case (OP_CARGAR):
-							st=op_cargar(simpletron);
-							(*simpletron)->contador_programa++;
-							break;
-						case (OP_GUARDAR):
-							st=op_guardar(simpletron);
-							(*simpletron)->contador_programa++;
-							break;
-						case (OP_PCARGAR):
-							st=op_pcargar(simpletron,cant_palabras);
-							(*simpletron)->contador_programa++;
-							break;
-						case(OP_PGUARDAR):
-							st=op_pguardar(simpletron,cant_palabras);
-							(*simpletron)->contador_programa++;
-							break;
-						case(OP_SUMAR):
-							st=op_sumar(simpletron);
-							(*simpletron)->contador_programa++;
-							break;
-						case(OP_RESTAR):
-							st=op_restar(simpletron);
-							(*simpletron)->contador_programa++;
-							break;
-						case(OP_DIVIDIR):
-							st=op_dividir(simpletron);
-							(*simpletron)->contador_programa++;
-							break;
-						case(OP_MULTIPLICAR):
-							st=op_multiplicar(simpletron);
-							(*simpletron)->contador_programa++;
-							break;
-						case(OP_JMP):
-							st=op_jmp(simpletron);
-							break;
-						case(OP_JMPNEG):
-							if((*simpletron)->acumulador<0)
-								st=op_jmp(simpletron);
-							else
-								(*simpletron)->contador_programa++;
-							break;
-						case(OP_JMPZERO):
-							if((*simpletron)->acumulador==0)
-								st=op_jmp(simpletron);
-							else
-								(*simpletron)->contador_programa++;
-							break;
-						case(OP_JNZ):
-							if((*simpletron)->acumulador!=0)
-								st=op_jmp(simpletron);
-							else
-							 	(*simpletron)->contador_programa++;
-							break;
-						case(OP_DJNZ):
-							st=op_djnz(simpletron);
-							break;
-						case (OP_HALT):
-							st=ST_SALIR;
-							break;
-						default:
-							(*simpletron)->contador_programa++;
-						break;
-				}		
-			}
-			else
-				imprimir_error(ST_ERROR_FUERA_DE_RANGO);
-		}
-		else
-			imprimir_error(ST_ERROR_FUERA_DE_RANGO);
-	}
-	else 
-		imprimir_error(ST_ERROR_FUERA_DE_RANGO);
-	}
-
-	if(st==ST_SALIR)
-		st=ST_OK;
-	return st;		
+		
 }
 
 
-status_t op_leer (simpletron_t ** simpletron)
+status_t op_leer (simpletron_t * simpletron)
  /*Lee una palabra por stdin a una posicion de memoria que está indicada por el operando (miembro de la estructura simpletron)*/
 {
 	long numero;
 	char * pc, lectura[MAX_CADENA];
-	char * ppc;
-
-	pc=NULL;
 
 	if(!simpletron)
+	{	
 		return ST_ERROR_PTR_NULO;
-
+	}
 	printf("%s\n", MSJ_INGRESO_PALABRA);
-
 	if ((fgets(lectura,MAX_CADENA,stdin))==NULL)
+	{	
 		return ST_ERROR_PALABRA_VACIA;
-	
-	if((ppc=strchr(lectura,'\n'))!=NULL)
-		*ppc='\0';
-
+	}
+	if((pc=strchr(lectura,'\n'))!=NULL)
+	{	
+		*pc='\0';
+	}
 	numero = strtol(lectura,&pc,10);
-
-	if(*pc!='\0'&& *pc!='\n')
-	    	return ST_ERROR_NO_NUMERICO;  
-
+	if(*pc!='\0')
+	{	
+	    return ST_ERROR_NO_NUMERICO;  
+	}
 	if(numero<MIN_PALABRA||numero>MAX_PALABRA)
-	 		return ST_ERROR_FUERA_DE_RANGO;
-
-	(*simpletron)->palabras[(*simpletron)->operando] = numero;	
-
+	{	
+	 	return ST_ERROR_FUERA_DE_RANGO;
+	}
+	simpletron->memoria->palabras[simpletron->operando] = numero;
 	return ST_OK;
 }
 
-status_t op_escribir(simpletron_t ** simpletron)
+status_t op_escribir(simpletron_t * simpletron)
  /*imprime por stdout el contenido de la posicion del operando (miembro de la estructura simpletron)*/
 {
-	fprintf(stdout, "%s %lu : %i\n", MSJ_IMPRIMIR_PALABRA,(*simpletron)->operando, (*simpletron)->palabras[(*simpletron)->operando]);
+	if(!simpletron)
+	{	
+		return ST_ERROR_PTR_NULO;
+	}	
+	fprintf(stdout, "%s %lu : %i\n", MSJ_IMPRIMIR_PALABRA,simpletron->operando, simpletron->memoria->palabras[simpletron->operando]);
 	return ST_OK;
 }
 
-status_t op_cargar (simpletron_t ** simpletron)
+status_t op_cargar (simpletron_t * simpletron)
 /*Carga en el acumulador (miembro de la estructura simpletron) la posicion de memoria indicada 
 por el operando(miembro de la estructura simpletron)*/
 {
-	
-	(*simpletron)->acumulador = (*simpletron)->palabras[(*simpletron)->operando];
+	if(!simpletron)
+	{		
+		return ST_ERROR_PTR_NULO;
+	}	
+	simpletron->acumulador = simpletron->memoria->palabras[simpletron->operando];
 	return ST_OK;
 }
 
 
-status_t op_pcargar (simpletron_t ** simpletron, size_t cant_palabras)
+status_t op_pcargar (simpletron_t * simpletron)
  /*Carga en el acumulador (miembro de la estructura simpletron) la posicion de memoria indicada 
  por la palabra a la que apunta el operando(miembro de la estructura simpletron)*/
 {
-	if((*simpletron)->palabras[(*simpletron)->operando] > cant_palabras){
+	if(!simpletron)
+	{	
+		return ST_ERROR_PTR_NULO;
+	}
+	if(!simpletron->memoria->pedido)
+	{
+		return ST_ERROR_CANT_PALABRAS;
+	}
+	if(simpletron->memoria->palabras[simpletron->operando] > simpletron->memoria->pedido)
+	{
 		return ST_ERROR_FUERA_DE_RANGO;
 	}
 
-	(*simpletron)->acumulador = (*simpletron)->palabras[(*simpletron)->palabras[(*simpletron)->operando]];
+	simpletron->acumulador = simpletron->memoria->palabras[simpletron->memoria->palabras[simpletron->operando]];
 	return ST_OK;
 }
 
-status_t op_guardar (simpletron_t ** simpletron)
+status_t op_guardar (simpletron_t * simpletron)
  /*guarda en la posicion de memoria indicada por el operando(miembro de la estructura simpletron)
   lo que está en el acumulador(miembro de la estructura simpletron)*/
 {
-
-	(*simpletron)->palabras[(*simpletron)->operando] = (*simpletron)->acumulador ;
+	if(!simpletron)
+	{	
+		return ST_ERROR_PTR_NULO;
+	}
+	simpletron->memoria->palabras[simpletron->operando] = simpletron->acumulador ;
 	return ST_OK;
 }
 
-status_t op_pguardar (simpletron_t ** simpletron, size_t cant_palabras)
+status_t op_pguardar (simpletron_t * simpletron)
  /*guarda en la posicion de memoria indicada por la palabra a la que apunta el operando (miembro de la estructura simpletron) 
  lo que esta en el acumulador(miembro de la estructura simpletron)*/
 {
-	if((*simpletron)->palabras[(*simpletron)->operando] > cant_palabras){
+	if(!simpletron)
+	{	
+		return ST_ERROR_PTR_NULO;
+	}
+	if(!simpletron->memoria->pedido)
+	{
+		return ST_ERROR_CANT_PALABRAS;
+	}
+	if(simpletron->memoria->palabras[simpletron->operando] > simpletron->memoria->pedido)
+	{
 		return ST_ERROR_FUERA_DE_RANGO;
 	}
-
-	(*simpletron)->palabras[(*simpletron)->palabras[(*simpletron)->operando]] = (*simpletron)->acumulador ;
+	simpletron->memoria->palabras[simpletron->memoria->palabras[simpletron->operando]] = simpletron->acumulador ;
 	return ST_OK;
 }
 
-status_t op_sumar(simpletron_t ** simpletron)
+status_t op_sumar(simpletron_t * simpletron)
  /*suma al acumulador (miembro de la estructura simpletron) lo guardado en la posicion de memoria indcada 
  por el operando(miembro de la estructura simpletron)*/
 {
-	(*simpletron)->acumulador += (*simpletron)->palabras[(*simpletron)->operando];
+	if(!simpletron)
+	{	
+		return ST_ERROR_PTR_NULO;
+	}
+	simpletron->acumulador += simpletron->memoria->palabras[simpletron->operando];
+	if(simpletron->acumulador>MAX_PALABRA)
+	{
+		return ST_ERROR_FUERA_DE_RANGO;
+	}
 	return ST_OK;
 }
 
-status_t op_restar (simpletron_t ** simpletron)
+status_t op_restar (simpletron_t * simpletron)
  /*resta al acumulador (miembro de la estructura simpletron) lo guardado en la posicion de memoria indcada 
  por el operando(miembro de la estructura simpletron)*/
 {
-	(*simpletron)->acumulador -= (*simpletron)->palabras[(*simpletron)->operando];
+	if(!simpletron)
+	{	
+		return ST_ERROR_PTR_NULO;
+	}
+	if(simpletron->acumulador>MAX_PALABRA)
+	{
+		return ST_ERROR_FUERA_DE_RANGO;
+	}
+	simpletron->acumulador -= simpletron->memoria->palabras[simpletron->operando];
 	return ST_OK;
 }
 
-status_t op_dividir (simpletron_t ** simpletron)
+status_t op_dividir (simpletron_t * simpletron)
  /*divide al acumulador (miembro de la estructura simpletron) por lo guardado en la posicion de memoria indicada
   por el operando(miembro de la estructura simpletron)*/
 {
-	(*simpletron)->acumulador /= (*simpletron)->palabras[(*simpletron)->operando];
+	if(!simpletron)
+	{	
+		return ST_ERROR_PTR_NULO;
+	}
+	if(simpletron->acumulador>MAX_PALABRA)
+	{
+		return ST_ERROR_FUERA_DE_RANGO;
+	}
+	simpletron->acumulador /= simpletron->memoria->palabras[simpletron->operando];
 	return ST_OK;
 }
 
-status_t op_multiplicar (simpletron_t ** simpletron)
+status_t op_multiplicar (simpletron_t * simpletron)
  /*multiplica al acumulador (miembro de la estructura simpletron)lo guardado en la posicion de memoria indicada por el operando(miembro de la estructura simpletron)*/
 {
-	(*simpletron)->acumulador *= (*simpletron)->palabras[(*simpletron)->operando];
+	if(!simpletron)
+	{	
+		return ST_ERROR_PTR_NULO;
+	}
+	simpletron->acumulador *= simpletron->memoria->palabras[simpletron->operando];
+	if(simpletron->acumulador>MAX_PALABRA)
+	{
+		return ST_ERROR_FUERA_DE_RANGO;
+	}
 	return ST_OK;
 }
 
-status_t op_jmp (simpletron_t ** simpletron)
+status_t op_jmp (simpletron_t * simpletron)
 /*salta a la posicion de memoria indicada por el operando(miembro de la estructura simpletron)*/
 {
-	(*simpletron)->contador_programa = (*simpletron)->operando;
+	if(!simpletron)
+	{	
+		return ST_ERROR_PTR_NULO;
+	}
+	simpletron->contador_programa = simpletron->operando;
 	return ST_OK;
 }
 
-status_t op_djnz (simpletron_t ** simpletron)
+status_t op_djnz (simpletron_t * simpletron)
  /*decrementa en 1 el acumulador (miembro de la estructura simpletron) y salta a la posicion indicada 
  por el operando (miembro de la estructura simpletron) en el caso que el acumulador sea distinto de 0*/
 {
-	(*simpletron)->acumulador--;
-	if ((*simpletron)->acumulador!=0)
-		(*simpletron)->contador_programa = (*simpletron)->operando;
+	if(!simpletron)
+	{	
+		return ST_ERROR_PTR_NULO;
+	}
+	if(simpletron->acumulador>MAX_PALABRA)
+	{
+		return ST_ERROR_FUERA_DE_RANGO;
+	}
+	simpletron->acumulador--;
+	if (simpletron->acumulador!=0)
+	{	
+		simpletron->contador_programa = simpletron->operando;
+	}	
 	else
-		(*simpletron)->contador_programa++;
+	{
+		simpletron->contador_programa++;
+	}
 	return ST_OK;
 }
