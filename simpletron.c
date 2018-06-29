@@ -420,6 +420,12 @@ status_t leer_archivo_bin (simpletron_t ** simpletron, FILE *fentrada)
 	
  		if(instruccion<MIN_PALABRA||instruccion>MAX_PALABRA)
  			return ST_ERROR_FUERA_DE_RANGO;
+
+ 		if(((instruccion&MASK_1)>>SHIFT)>MAX_CANT_OPCODE)
+	 			return ST_ERROR_FUERA_DE_RANGO;
+
+	 	if((instruccion&MASK_2)>MAX_CANT_OPERANDO)
+	 			return ST_ERROR_FUERA_DE_RANGO;
  		
  		(*simpletron)->palabras[i]=instruccion;
  	}
@@ -479,6 +485,12 @@ status_t leer_archivo_txt(simpletron_t ** simpletron, parametros_t * argumentos,
 
 	 		if(instruccion<MIN_PALABRA||instruccion>MAX_PALABRA)
 	 			return ST_ERROR_FUERA_DE_RANGO;
+
+	 		if(((instruccion&MASK_1)>>SHIFT)>MAX_CANT_OPCODE)
+	 			return ST_ERROR_FUERA_DE_RANGO;
+
+	 		if((instruccion&MASK_2)>MAX_CANT_OPERANDO)
+	 			return ST_ERROR_FUERA_DE_RANGO;
 	 	
 	 		(*simpletron)->palabras[i]=instruccion;
 
@@ -528,6 +540,12 @@ status_t leer_archivo_txt(simpletron_t ** simpletron, parametros_t * argumentos,
 	    		break;
 
 	 		if(instruccion<MIN_PALABRA||instruccion>MAX_PALABRA)
+	 			return ST_ERROR_FUERA_DE_RANGO;
+
+	 		if(((instruccion&MASK_1)>>SHIFT)>MAX_CANT_OPCODE)
+	 			return ST_ERROR_FUERA_DE_RANGO;
+
+	 		if((instruccion&MASK_2)>MAX_CANT_OPERANDO)
 	 			return ST_ERROR_FUERA_DE_RANGO;
 	 	
 	 		(*simpletron)->palabras[i]=instruccion;
@@ -625,7 +643,101 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
  en el vector palabras, y después se llama a una función que realiza la operación necesaria. 
  Ademas, se valida que el operando sea una posicion de memoria existente*/
 {
-		
+		status_t st;
+
+	st=ST_OK;
+
+	while(st==ST_OK){
+		if((simpletron->palabras)>0){	
+			if(0<(simpletron->opcode=simpletron->palabras[simpletron->contador_programa]/10000) && simpletron->opcode<MAX_CANT_OPCODE){
+				if(0<(simpletron->operando=(simpletron->palabras[simpletron->contador_programa])-(simpletron->opcode)*10000) && simpletron->operando<MAX_CANT_OPERANDO){	
+
+					switch ((*simpletron)->opcode){
+						case (OP_LEER):
+							st=x[F_op_leer](simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case (OP_ESCRIBIR):
+							st=x[F_op_escribir](simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case (OP_CARGAR):
+							st=x[F_op_cargar](simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case (OP_GUARDAR):
+							st=x[F_op_guardar](simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case (OP_PCARGAR):
+							st=x[F_op_pcargar](simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case(OP_PGUARDAR):
+							st=x[F_op_pguardar](simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case(OP_SUMAR):
+							st=x[F_op_sumar](simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case(OP_RESTAR):
+							st=x[F_op_restar](simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case(OP_DIVIDIR):
+							st=x[F_op_dividir](simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case(OP_MULTIPLICAR):
+							st=x[F_op_multiplicar](simpletron);
+							(*simpletron)->contador_programa++;
+							break;
+						case(OP_JMP):
+							st=x[F_op_jmp](simpletron);
+							break;
+						case(OP_JMPNEG):
+							if((*simpletron)->acumulador<0)
+								st=x[F_op_jmp](simpletron);
+							else
+								(*simpletron)->contador_programa++;
+							break;
+						case(OP_JMPZERO):
+							if((*simpletron)->acumulador==0)
+								st=x[F_op_jmp](simpletron);
+							else
+								(*simpletron)->contador_programa++;
+							break;
+						case(OP_JNZ):
+							if((*simpletron)->acumulador!=0)
+								st=x[F_op_jmp](simpletron);
+							else
+							 	(*simpletron)->contador_programa++;
+							break;
+						case(OP_DJNZ):
+							st=x[F_op_jmp](simpletron);
+							break;
+						case (OP_HALT):
+							st=ST_SALIR;
+							break;
+						default:
+							(*simpletron)->contador_programa++;
+						break;
+				}		
+			}
+			else
+				imprimir_error(ST_ERROR_FUERA_DE_RANGO);
+		}
+		else
+			imprimir_error(ST_ERROR_FUERA_DE_RANGO);
+	}
+	else 
+		imprimir_error(ST_ERROR_FUERA_DE_RANGO);
+	}
+
+	if(st==ST_SALIR)
+		st=ST_OK;
+	return st;		
 }
 
 
