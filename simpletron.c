@@ -16,12 +16,12 @@
 #include "leng_espanol.h"
 #endif
 
-#include "constantes.h"
+#include "tipos.h"
 #include "simpletron.h"
-#include "status.h"
-#include "status.c"
-#include "parametros.h"
+#include "errores.h"
+#include "errores.c"
 #include "prototipos.h"
+#include "vector_puntero_funcion.c"
 #include "tda_lista.h"
 #include "tda_lista_rec.c"
 #include "tda_vector.c"
@@ -634,9 +634,9 @@ status_t leer_archivo_txt(simpletron_t ** simpletron, FILE *fentrada)
  		}	
  		(*simpletron)->memoria->palabras[i]=instruccion;
  		i++;
-	 	}
-		return ST_OK;
-	}
+	}	
+	return ST_OK;
+	
 }
 
 status_t leer_archivo_stdin(simpletron_t ** simpletron)
@@ -795,6 +795,7 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
  Ademas, se valida que el operando sea una posicion de memoria existente*/
 {
 	status_t st;
+	vector_punteros_t pt;
 	st=ST_OK;
 
 	if (!simpletron)
@@ -809,68 +810,83 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
 
 					switch (simpletron->opcode){
 						case (OP_LEER):
-							st=x[F_op_leer](simpletron);
+							pt=F_OP_LEER;
+							st=p_funciones[pt](simpletron);
 							simpletron->contador_programa++;
 							break;
 						case (OP_ESCRIBIR):
-							st=x[F_op_escribir](simpletron);
+							pt=F_OP_ESCRIBIR;
+							st=p_funciones[pt](simpletron);
 							simpletron->contador_programa++;
 							break;
 						case (OP_CARGAR):
-							st=x[F_op_cargar](simpletron);
+							pt=F_OP_CARGAR;
+							st=p_funciones[pt](simpletron);
 							simpletron->contador_programa++;
 							break;
 						case (OP_GUARDAR):
-							st=x[F_op_guardar](simpletron);
+							pt=F_OP_GUARDAR;
+							st=p_funciones[pt](simpletron);
 							simpletron->contador_programa++;
 							break;
 						case (OP_PCARGAR):
-							st=x[F_op_pcargar](simpletron);
+							pt=F_OP_PCARGAR;
+							st=p_funciones[pt](simpletron);
 							simpletron->contador_programa++;
 							break;
 						case(OP_PGUARDAR):
-							st=x[F_op_pguardar](simpletron);
+							pt=F_OP_PGUARDAR;
+							st=p_funciones[pt](simpletron);
 							simpletron->contador_programa++;
 							break;
 						case(OP_SUMAR):
-							st=x[F_op_sumar](simpletron);
+							pt=F_OP_SUMAR;
+							st=p_funciones[pt](simpletron);
 							simpletron->contador_programa++;
 							break;
 						case(OP_RESTAR):
-							st=x[F_op_restar](simpletron);
+							pt=F_OP_RESTAR;
+							st=p_funciones[pt](simpletron);
 							simpletron->contador_programa++;
 							break;
 						case(OP_DIVIDIR):
-							st=x[F_op_dividir](simpletron);
+							pt=F_OP_DIVIDIR;
+							st=p_funciones[pt](simpletron);
 							simpletron->contador_programa++;
 							break;
 						case(OP_MULTIPLICAR):
-							st=x[F_op_multiplicar](simpletron);
+							pt=F_OP_MULTIPLICAR;
+							st=p_funciones[pt](simpletron);
 							simpletron->contador_programa++;
 							break;
 						case(OP_JMP):
-							st=x[F_op_jmp](simpletron);
+							pt=F_OP_JMP;
+							st=p_funciones[pt](simpletron);
 							break;
 						case(OP_JMPNEG):
+							pt=F_OP_JMP;
 							if(simpletron->acumulador<0)
-								st=x[F_op_jmp](simpletron);
+								st=p_funciones[pt](simpletron);
 							else
 								simpletron->contador_programa++;
 							break;
 						case(OP_JMPZERO):
+							pt=F_OP_JMP;
 							if(simpletron->acumulador==0)
-								st=x[F_op_jmp](simpletron);
+								st=p_funciones[pt](simpletron);
 							else
 								simpletron->contador_programa++;
 							break;
 						case(OP_JNZ):
+							pt=F_OP_JMP;
 							if(simpletron->acumulador!=0)
-								st=x[F_op_jmp](simpletron);
+								st=p_funciones[pt](simpletron);
 							else
 							 	simpletron->contador_programa++;
 							break;
 						case(OP_DJNZ):
-							st=x[F_op_jmp](simpletron);
+							pt=F_OP_JMP;
+							st=p_funciones[pt](simpletron);
 							break;
 						case (OP_HALT):
 							st=ST_SALIR;
