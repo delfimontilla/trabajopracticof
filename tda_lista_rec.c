@@ -31,7 +31,7 @@ status_t LISTA_crear(lista_t * plista) /*Crea una lista. Devuelve ST_ERROR_PTR_N
     return ST_OK;
 }
 
-status_t LISTA_crear_nodo(nodo_t ** pnodo, void * simpletron) /*Crea un nodo y le coloca el valor del simpletron que se quiere.*/
+status_t LISTA_crear_nodo(nodo_t ** pnodo, simpletron_t * simpletron) /*Crea un nodo y le coloca el valor del simpletron que se quiere.*/
 {
     if(pnodo == NULL) 
         return ST_ERROR_PTR_NULO;
@@ -45,7 +45,7 @@ status_t LISTA_crear_nodo(nodo_t ** pnodo, void * simpletron) /*Crea un nodo y l
     return ST_OK;
 }
 
-status_t LISTA_destruir_nodo(nodo_t ** pnodo, status_t (*destructor_simpletron)(void *))/*Destruye el nodo pasado como parametro y se destruye la simpletron contendia en ese nodo.*/
+status_t LISTA_destruir_nodo(nodo_t ** pnodo, status_t (*destructor_simpletron)(simpletron_t **))/*Destruye el nodo pasado como parametro y se destruye la simpletron contendia en ese nodo.*/
 {
     void * simpletron;
 
@@ -65,7 +65,7 @@ status_t LISTA_destruir_nodo(nodo_t ** pnodo, status_t (*destructor_simpletron)(
     return (destructor_simpletron != NULL) ? (*destructor_simpletron)(simpletron) : ST_OK;/*Verifica si ya se pudo destruir simpletron y si no se pudo se destruye.*/
 }
 
-status_t LISTA_destruir_primero(lista_t * plista, status_t (*destructor_simpletron)(void *))/*Destruye el primer nodo de la lista*/
+status_t LISTA_destruir_primero(lista_t * plista, status_t (*destructor_simpletron)(simpletron_t **))/*Destruye el primer nodo de la lista*/
 {
     nodo_t * primero;
 
@@ -81,7 +81,7 @@ status_t LISTA_destruir_primero(lista_t * plista, status_t (*destructor_simpletr
     return LISTA_destruir_nodo(&primero, destructor_simpletron);/*Llama a la funcion destruir_nodo para que destruya el nodo deseada. Se manda la dirección por medio de la variable local.*/
 }
 
-status_t LISTA_destruir(lista_t * plista, status_t (*destructor_simpletron)(void *))/*Destruye toda la lista. Se le pasa por argumento el primer nodo de la lista y el puntero a funcion.*/
+status_t LISTA_destruir(lista_t * plista, status_t (*destructor_simpletron)(simpletron_t **))/*Destruye toda la lista. Se le pasa por argumento el primer nodo de la lista y el puntero a funcion.*/
 {
     nodo_t * siguiente;
 
@@ -97,7 +97,7 @@ status_t LISTA_destruir(lista_t * plista, status_t (*destructor_simpletron)(void
     return LISTA_destruir(&siguiente, destructor_simpletron);/*Vuelve a llamarse a si misma, pasandole la direccion del siguiente nodo.*/
 }
 
-status_t LISTA_insertar_al_ppio(lista_t * plista, void * simpletron) /*Inserta al principio de la lista un nuevo nodo con su estructura.*/
+status_t LISTA_insertar_al_ppio(lista_t * plista, simpletron_t * simpletron) /*Inserta al principio de la lista un nuevo nodo con su estructura.*/
 {
     nodo_t * nuevo;
     status_t rv;
@@ -114,7 +114,7 @@ status_t LISTA_insertar_al_ppio(lista_t * plista, void * simpletron) /*Inserta a
     return ST_OK;
 }
 
-status_t LISTA_insertar_al_final(lista_t * plista, void * simpletron) /*Inserta un nodo al final de la lista*/ 
+status_t LISTA_insertar_al_final(lista_t * plista, simpletron_t * simpletron) /*Inserta un nodo al final de la lista*/ 
 {
     if(plista == NULL)
         return ST_ERROR_PTR_NULO;
@@ -125,7 +125,7 @@ status_t LISTA_insertar_al_final(lista_t * plista, void * simpletron) /*Inserta 
     return LISTA_insertar_al_final(&((*plista)->siguiente), simpletron);/*Avanza al siguiente nodo llamandose a si misma.*/
 }
 
-status_t LISTA_insertar_decreciente(lista_t * plista, void * simpletron, int (*cmp)/*Compare*/(void *, void *)) /*Inserta un simpletron en orden decreciente.*/
+status_t LISTA_insertar_decreciente(lista_t * plista, simpletron_t * simpletron, int (*cmp)/*Compare*/(void *, void *)) /*Inserta un simpletron en orden decreciente.*/
 {
     status_t rv;
     nodo_t * nuevo;
@@ -158,7 +158,7 @@ void * LISTA_buscar(lista_t pnodo, void * t, int (*es_igual)(void *, void *)) /*
     return LISTA_buscar(pnodo->siguiente, t, es_igual);/*Si no lo encuentra se vuelve a llamar*/
 }
 
-status_t LISTA_imprimir(lista_t pnodo, FILE * ofile, status_t (*impresor)(void *, FILE *)) /*imprime la lista desde el nodo pasado por argumento en el archivo pasado por argumento con la funcion pasada como argumento*/
+status_t LISTA_imprimir(lista_t pnodo, FILE * ofile, status_t (*impresor)(simpletron_t *, FILE *)) /*imprime la lista desde el nodo pasado por argumento en el archivo pasado por argumento con la funcion pasada como argumento*/
 {
     if(pnodo == NULL) /*Validaciones*/
         return ST_OK;
@@ -169,68 +169,23 @@ status_t LISTA_imprimir(lista_t pnodo, FILE * ofile, status_t (*impresor)(void *
     return ST_OK;
 }
 
-status_t LISTA_recorrer(lista_t pnodo, status_t (*funcion)(void *)) /*Recorre la lista desde el nodo pasado como argumento aplicandole la funcion deseada.*/
+status_t LISTA_recorrer(lista_t pnodo, status_t (*funcion)(simpletron_t *)) /*Recorre la lista desde el nodo pasado como argumento aplicandole la funcion deseada.*/
 {
     if(pnodo == NULL)
         return ST_OK;
 
-    (*funcion)(pnodo->simpletron, argumento);
+    (*funcion)(pnodo->simpletron);
     return LISTA_recorrer(pnodo->siguiente, funcion);
 }
 
 
 /*****************hacer funcion destruir simpletor, cmp, es_igual, impresor, funcion**************/
-
-/**
+/*
 defino mi funcion como normalmente
 typedef tipo de la funcion * nombregenerico (argumentos);
 int main*(){
     nombregenerico=nombredefunccion;
     nombredefunccion=PONER LA FUNCION;
      y ya la uso como puntero a funcion
-}
-
-
-
-
-
-**/
-
-/*
-
-typedef status_t * liberar_memoria(void * simpletron, FILE * ofile);
-
-int main(int argc, char const *argv[])
-{
-    
-
-
-
-
-    if (argumentos.fs_bin==TRUE){
-        punteroafuncion = imprimir_archivo_bin;
-        if((st=LISTA_imprimir(simpletron, fsalida,imprimir_archivo_bin(simpletron, fsalida)))!=ST_OK){
-            free(simpletron);
-            simpletron=NULL;
-            if(fentrada!=NULL)
-                fclose(fentrada);
-            if(fsalida!=NULL)
-                fclose(fsalida);
-            imprimir_error(st);
-            return EXIT_FAILURE;
-        }       
-    }
-
-    else if((st=LISTA_imprimir(simpletron, fsalida,imprimir_archivo_txt(simpletron, fsalida)!=ST_OK){
-        free(simpletron);
-        simpletron=NULL;
-        if(fentrada!=NULL)
-            fclose(fentrada);
-        if(fsalida!=NULL)
-            fclose(fsalida);
-        imprimir_error(st);
-        return EXIT_FAILURE;
-    }
-    return 0;
 }
 */

@@ -37,16 +37,16 @@ typedef struct nodo {
 
 bool_t LISTA_esta_vacia(lista_t);
 status_t LISTA_crear(lista_t *);
-status_t LISTA_crear_nodo(nodo_t ** , void *);
-status_t LISTA_destruir_nodo(nodo_t **, status_t (*destructor_dato)(void *));
-status_t LISTA_destruir(lista_t *, status_t (*destructor_dato)(void *));
-status_t LISTA_insertar_al_ppio(lista_t *, void *);
-status_t LISTA_insertar_al_final(lista_t *, void *);
-status_t LISTA_insertar_decreciente(lista_t *, void *, int (*cmp)(void *, void *));
+status_t LISTA_crear_nodo(nodo_t ** pnodo, simpletron_t * simpletron);
+status_t LISTA_destruir_nodo(nodo_t ** pnodo, status_t (*destructor_simpletron)(simpletron_t **));
+status_t LISTA_destruir_primero(lista_t * plista, status_t (*destructor_simpletron)(simpletron_t **));
+status_t LISTA_destruir(lista_t * plista, status_t (*destructor_simpletron)(simpletron_t **));
+status_t LISTA_insertar_al_ppio(lista_t * plista, simpletron_t * simpletron);
+status_t LISTA_insertar_al_final(lista_t * plista, simpletron_t * simpletron);
+status_t LISTA_insertar_decreciente(lista_t * plista, simpletron_t * simpletron, int (*cmp)(void *, void *));
 
 void * LISTA_buscar(nodo_t *, void *, int (*cmp)(void *, void *));
-status_t LISTA_imprimir(lista_t, FILE *, status_t (*impresor)(void *, FILE *));
-status_t LISTA_recorrer(lista_t, status_t (*pf)(void *, void *), void *);
-status_t LISTA_filtrar(lista_t, lista_t *, bool_t (*filtro)(void *));
+status_t LISTA_imprimir(lista_t pnodo, FILE * ofile, status_t (*impresor)(simpletron_t*, FILE *));
+status_t LISTA_recorrer(lista_t pnodo, status_t (*funcion)(simpletron_t *));
 
 #endif

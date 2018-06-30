@@ -35,13 +35,12 @@
 #define ARG_CANT_PALABRAS "-m"
 #define ARG_FSALIDA "-f"
 
-#define FIN -99999
-#define MIN_PALABRA -9999
-#define MAX_PALABRA 9999
+#define FIN -99999999
+#define MIN_PALABRA -9999999
+#define MAX_PALABRA 9999999
 
-
-#define TABULACION "\t"
 #define SALTO "\n"
+#define TABULACION "\t"
 #define PREGUNTA "?"
 #define DELIM_COMA ';'
 #define DELIM_2PUNTOS ':'

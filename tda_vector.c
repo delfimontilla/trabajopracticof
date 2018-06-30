@@ -1,11 +1,7 @@
+#ifndef TDA_VECTOR__H
+#define TDA_VECTOR__H
+
 #include <stdio.h>
-#include <stdlib.h>
-
-
-typedef struct memoria{
-	size_t pedido; 
-	palabra_t * palabras;
-} memoria_t;
 
 memoria_t * vector_crear (size_t sz){
 	memoria_t *v;
@@ -40,8 +36,4 @@ void vector_iterar (vector_t *v, void (*func) (void*, void*), void *arg){
 	}
 }
 
-void print(void *vstream, void *vint){
-	FILE *f=(FILE*) vstream;
-	int * i= (int *) vint;
-	fprintf(f, "%i\n",*i);
-}	
+#endif
