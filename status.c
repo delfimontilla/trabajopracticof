@@ -1,3 +1,8 @@
+#ifndef STATUS__C
+#define STATUS__C 1
+
+#include <stdio.h>
+
 const char * errmsg[] = {
 	MSJ_OK,
 	MSJ_ERROR_PTR_NULO,
@@ -17,7 +22,7 @@ const char * errmsg[] = {
 	MSJ_SALIR
 };
 
-status_t (*x[])(simpletron_*) = [op_leer(),
+status_t (*x[])(simpletron_t *) = [op_leer(),
 	op_escribir(),
 	op_cargar(),
 	op_guardar(),
@@ -29,3 +34,5 @@ status_t (*x[])(simpletron_*) = [op_leer(),
 	op_multiplicar(),
 	op_jmp(),
 	op_djnz()];
+
+#endif

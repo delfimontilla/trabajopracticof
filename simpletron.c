@@ -17,8 +17,9 @@
 #endif
 
 #include "constantes.h"
-#include "status.h"
 #include "simpletron.h"
+#include "status.h"
+#include "status.c"
 #include "parametros.h"
 #include "prototipos.h"
 #include "tda_lista.h"
@@ -198,7 +199,7 @@ int main(int argc, char *argv[])
 		}   	
 	   	argumentos.inicio_arch++;
 	}
- 	if((st=LISTA_recorrer(lsimpletron, ejecutar_simpletron()))!=ST_OK)
+ 	if((st=LISTA_recorrer(lsimpletron, ejecutar_simpletron(simpletron)))!=ST_OK)
  	{
    		imprimir_error(st);
      	if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
@@ -236,7 +237,7 @@ int main(int argc, char *argv[])
    	}
    	if (argumentos.fmt_sal_txt==true)
    	{	
-		if((st=LISTA_imprimir(lsimpletron, fsalida, imprimir_archivo_txt()))!=ST_OK)
+		if((st=LISTA_imprimir(lsimpletron, fsalida, imprimir_archivo_txt(simpletron,fsalida)))!=ST_OK)
 	   	{
 	   	   	imprimir_error(st);	
 	   		if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
@@ -265,7 +266,7 @@ int main(int argc, char *argv[])
     }
     else if (argumentos.fmt_sal_bin==true)
    	{	
-		if((st=LISTA_imprimir(lsimpletron, fsalida, imprimir_archivo_bin()))!=ST_OK)
+		if((st=LISTA_imprimir(lsimpletron, fsalida, imprimir_archivo_bin(simpletron,fsalida)))!=ST_OK)
 	   	{
 	   	   	imprimir_error(st);	
 	   		if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
@@ -435,6 +436,7 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 			}	
 		}
 	}
+	return ST_OK;
 }
 
 status_t inicializar_simpletron (simpletron_t **simpletron, size_t cant_palabras)
@@ -653,7 +655,7 @@ status_t leer_archivo_stdin(simpletron_t ** simpletron)
 	}
 
  	printf("%s\n",MSJ_BIENVENIDA);	
-	for(i=0; i<simpletron->memoria->pedido;i++)
+	for(i=0; i<(*simpletron)->memoria->pedido;i++)
 	{	
 		printf("%2.i %s \n", i,PREGUNTA);
     	if(fgets(aux,MAX_CADENA,stdin)==NULL)

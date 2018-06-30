@@ -17,7 +17,7 @@ memoria_t * vector_crear (size_t sz){
 	return v;
 }	
 
-void vector_destruir(vector_t ** v){
+void vector_destruir(memoria_t ** v){
 	if(v&&*v){
 		if ((*v)->palabras)
 			free((*v)->palabras);
@@ -26,7 +26,7 @@ void vector_destruir(vector_t ** v){
 	}
 }
 
-void vector_iterar (vector_t *v, void (*func) (void*, void*), void *arg){
+void vector_iterar (memoria_t *v, void (*func) (void*, void**), void *arg){
 	size_t i;
 	if(v&&func){
 		for (i=0; i< v->pedido;){
