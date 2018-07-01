@@ -37,7 +37,7 @@ status_t LISTA_crear_nodo(nodo_t ** pnodo, simpletron_t * simpletron) /*Crea un 
         return ST_ERROR_PTR_NULO;
 
     if((*pnodo = (nodo_t *)calloc(1, sizeof(nodo_t))) == NULL)/*Se crea la memoria para el nodo, y se valida.*/
-        return RV_NOSPACE;
+        return ST_ERROR_NO_MEM;
 
     (*pnodo)->siguiente = NULL;/*Se pone el siguiente nodo en NULL*/
     (*pnodo)->simpletron = simpletron; /*Se le guarda el valor de la simpletron*/
@@ -100,13 +100,13 @@ status_t LISTA_destruir(lista_t * plista, status_t (*destructor_simpletron)(simp
 status_t LISTA_insertar_al_ppio(lista_t * plista, simpletron_t * simpletron) /*Inserta al principio de la lista un nuevo nodo con su estructura.*/
 {
     nodo_t * nuevo;
-    status_t rv;
+    status_t st;
 
     if(plista == NULL) /*Validaciones*/
         return ST_ERROR_PTR_NULO;
 
-    if((rv = LISTA_crear_nodo(&nuevo, simpletron)) != ST_OK)/*Crea el nodo y si llega a tener un error  devuelve ese error. */
-        return rv;
+    if((st = LISTA_crear_nodo(&nuevo, simpletron)) != ST_OK)/*Crea el nodo y si llega a tener un error  devuelve ese error. */
+        return st;
 
     nuevo->siguiente = *plista;/*copio en una variable local en el siguiente nodo para luego copiar en el primer nodo lo conseguido en crear_nodo*/
     *plista = nuevo;
@@ -127,7 +127,7 @@ status_t LISTA_insertar_al_final(lista_t * plista, simpletron_t * simpletron) /*
 
 status_t LISTA_insertar_decreciente(lista_t * plista, simpletron_t * simpletron, int (*cmp)/*Compare*/(void *, void *)) /*Inserta un simpletron en orden decreciente.*/
 {
-    status_t rv;
+    status_t st;
     nodo_t * nuevo;
 
     if(plista == NULL)
@@ -135,8 +135,8 @@ status_t LISTA_insertar_decreciente(lista_t * plista, simpletron_t * simpletron,
 
     if(LISTA_esta_vacia(*plista) || (*cmp)( (*plista)->simpletron, simpletron) < 0 ) /*Si el puntero es al último de la lista o si lo que ingreso es mas grande????????????????? que lo que está en esa posicion se crea el nodo y se introduce la estructura. */
     {
-        if((rv = LISTA_crear_nodo(&nuevo, simpletron)) != ST_OK)
-            return rv;
+        if((st = LISTA_crear_nodo(&nuevo, simpletron)) != ST_OK)
+            return st;
 
         nuevo->siguiente = *plista;
         *plista = nuevo;

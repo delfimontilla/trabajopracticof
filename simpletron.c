@@ -34,6 +34,11 @@ int main(int argc, char *argv[])
 	parametros_t argumentos;
     status_t st;
     FILE *fentrada, *fsalida;
+
+    status_t (*destructor_simpletron)(simpletron_t**)=liberar_memoria;
+    status_t (*impresor_txt)(simpletron_t *, FILE *)=imprimir_archivo_txt;
+    status_t (*impresor_bin)(simpletron_t *, FILE *)=imprimir_archivo_bin;
+    status_t (*ejecutar)(simpletron_t *)=ejecutar_simpletron;
     
    	cant_palabras=0;
     simpletron=NULL;
@@ -63,7 +68,7 @@ int main(int argc, char *argv[])
 		if((st=inicializar_simpletron(&simpletron, cant_palabras))!=ST_OK)
 		{
      		imprimir_error(st);
-     		if((st=LISTA_destruir(&lsimpletron, liberar_memoria(&simpletron)))!=ST_OK)
+     		if((st=LISTA_destruir(&lsimpletron, destructor_simpletron))!=ST_OK)
      		{
  		    	if(fentrada!=NULL)
  		    	{
@@ -85,7 +90,7 @@ int main(int argc, char *argv[])
 		       	imprimir_error(st);
 		       	free(simpletron);
 		       	simpletron=NULL;
-		       	if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
+		       	if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
      			{
   			   		if(fentrada!=NULL)
   			   		{
@@ -105,7 +110,7 @@ int main(int argc, char *argv[])
 		   		imprimir_error(st);
 		   		free(simpletron);
 			   	simpletron=NULL;
-		   		if((st=LISTA_destruir(&lsimpletron, liberar_memoria(&simpletron)))!=ST_OK)
+		   		if((st=LISTA_destruir(&lsimpletron, destructor_simpletron))!=ST_OK)
 	  			{
 	 		   		if(fentrada!=NULL)
 	 		   		{
@@ -124,7 +129,7 @@ int main(int argc, char *argv[])
    	   			imprimir_error(st);
    	   			free(simpletron);
 		       	simpletron=NULL;
-     			if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
+     			if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
      			{
  		    		if(fentrada!=NULL)
  		    		{	
@@ -142,7 +147,7 @@ int main(int argc, char *argv[])
 		       		imprimir_error(st);
 		       		free(simpletron);
 		       		simpletron=NULL;
-			     	if((st=LISTA_destruir(&lsimpletron, liberar_memoria(&simpletron)))!=ST_OK)
+			     	if((st=LISTA_destruir(&lsimpletron, destructor_simpletron))!=ST_OK)
 	     			{
 	  			   		if(fentrada!=NULL)
 	  			   		{
@@ -165,7 +170,7 @@ int main(int argc, char *argv[])
 			       	imprimir_error(st);
 			       	free(simpletron);
 			       	simpletron=NULL;
-			       	if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
+			       	if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
 	     			{
 	  			   		if(fentrada!=NULL)
 	  			   		{
@@ -186,7 +191,7 @@ int main(int argc, char *argv[])
 		   		imprimir_error(st);
 		   		free(simpletron);
 			   	simpletron=NULL;
-		   		if((st=LISTA_destruir(&lsimpletron, liberar_memoria(&simpletron)))!=ST_OK)
+		   		if((st=LISTA_destruir(&lsimpletron, destructor_simpletron))!=ST_OK)
 	  			{
 	 		   		if(fentrada!=NULL)
 	 		   		{
@@ -199,10 +204,10 @@ int main(int argc, char *argv[])
 		}   	
 	   	argumentos.inicio_arch++;
 	}
- 	if((st=LISTA_recorrer(lsimpletron, ejecutar_simpletron(simpletron)))!=ST_OK)
+ 	if((st=LISTA_recorrer(lsimpletron, ejecutar)!=ST_OK))
  	{
    		imprimir_error(st);
-     	if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
+     	if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
      	{
   			if(fentrada!=NULL)
   	   		{
@@ -220,7 +225,7 @@ int main(int argc, char *argv[])
    	if((st=abrir_archivo_salida(&argumentos, &fsalida))!=ST_OK)
    	{
    	   	imprimir_error(st);	
-   		if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
+   		if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
      	{
   			if(fentrada!=NULL)
   	   		{
@@ -237,10 +242,10 @@ int main(int argc, char *argv[])
    	}
    	if (argumentos.fmt_sal_txt==true)
    	{	
-		if((st=LISTA_imprimir(lsimpletron, fsalida, imprimir_archivo_txt(simpletron,fsalida)))!=ST_OK)
+		if((st=LISTA_imprimir(lsimpletron, fsalida,impresor_txt))!=ST_OK)
 	   	{
 	   	   	imprimir_error(st);	
-	   		if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
+	   		if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
 	     	{
 	  			if(fentrada!=NULL)
 	  	   		{
@@ -266,10 +271,10 @@ int main(int argc, char *argv[])
     }
     else if (argumentos.fmt_sal_bin==true)
    	{	
-		if((st=LISTA_imprimir(lsimpletron, fsalida, imprimir_archivo_bin(simpletron,fsalida)))!=ST_OK)
+		if((st=LISTA_imprimir(lsimpletron, fsalida,impresor_bin))!=ST_OK)
 	   	{
 	   	   	imprimir_error(st);	
-	   		if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
+	   		if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
 	     	{
 	  			if(fentrada!=NULL)
 	  	   		{
@@ -293,7 +298,7 @@ int main(int argc, char *argv[])
 	   		return EXIT_FAILURE;
 	   	}   		
     }
-	if((st=LISTA_destruir(&lsimpletron,liberar_memoria(&simpletron)))!=ST_OK)
+	if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
    	{
 		if(fentrada!=NULL)
 		{
@@ -307,10 +312,13 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
    	}	
 	if(fentrada!=NULL)
+	{
         fclose(fentrada);
+    }
     if(fsalida!=NULL)
+    {
 	   	fclose(fsalida);
- 
+ 	}
     return EXIT_SUCCESS;
 }
 
@@ -804,7 +812,7 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
 	}
 
 	while(st==ST_OK){
-		if((simpletron->memoria->palabras)>0){	
+		if(simpletron->memoria->palabras[simpletron->contador_programa]>0){	
 			if(0<(simpletron->opcode=simpletron->memoria->palabras[simpletron->contador_programa]/10000) && simpletron->opcode<MAX_CANT_OPCODE){
 				if(0<(simpletron->operando=(simpletron->memoria->palabras[simpletron->contador_programa])-(simpletron->opcode)*10000) && simpletron->operando<MAX_CANT_OPERANDO){	
 

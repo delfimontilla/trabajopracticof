@@ -26,10 +26,10 @@ void vector_destruir(memoria_t ** v){
 	}
 }
 
-void vector_iterar (memoria_t *v, void (*func) (void*, void**), void *arg){
+void vector_iterar (memoria_t *v, void (*func) (void*, palabra_t), void *arg){
 	size_t i;
 	if(v&&func){
-		for (i=0; i< v->pedido;){
+		for (i=0; i< v->pedido;i++){
 			if(v->palabras[i])
 				(*func)(arg,v->palabras[i]);
 		}
