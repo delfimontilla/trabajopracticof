@@ -14,7 +14,7 @@
 +0210020 ; GUARDAR el contenido del acumulador en la posición 20
 +0400001 ; JMP salta a la posición 01
 +0110020 ; ESCRIBIR por pantalla la posición 20
-+04500000 ; HALT
++0450000 ; HALT
 +0000000 ; Pos. 17 Variable A
 +0000000 ; Pos. 18 Variable B
 +0000000 ; Pos. 19 Variable D
