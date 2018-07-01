@@ -811,12 +811,16 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
 		return ST_ERROR_PTR_NULO;
 	}
 
-	while(st==ST_OK){
-		if(simpletron->memoria->palabras[simpletron->contador_programa]>0){	
-			if(0<(simpletron->opcode=simpletron->memoria->palabras[simpletron->contador_programa]/10000) && simpletron->opcode<MAX_CANT_OPCODE){
-				if(0<(simpletron->operando=(simpletron->memoria->palabras[simpletron->contador_programa])-(simpletron->opcode)*10000) && simpletron->operando<MAX_CANT_OPERANDO){	
-
-					switch (simpletron->opcode){
+	while(st==ST_OK)
+	{
+		if(simpletron->memoria->palabras[simpletron->contador_programa]>0)
+		{	
+			if(0<(simpletron->opcode=simpletron->memoria->palabras[simpletron->contador_programa]/10000) && simpletron->opcode<MAX_CANT_OPCODE)
+			{
+				if(0<(simpletron->operando=(simpletron->memoria->palabras[simpletron->contador_programa])-(simpletron->opcode)*10000) && simpletron->operando<MAX_CANT_OPERANDO)
+				{	
+					switch (simpletron->opcode)
+					{
 						case (OP_LEER):
 							pt=F_OP_LEER;
 							st=p_funciones[pt](simpletron);
@@ -902,18 +906,29 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
 						default:
 							simpletron->contador_programa++;
 						break;
-				}		
+					}		
+				}
+				else
+				{
+					st=ST_ERROR_FUERA_DE_RANGO;
+					imprimir_error(st);
+					return st;
+				}
 			}
 			else
-				imprimir_error(ST_ERROR_FUERA_DE_RANGO);
-		}
+			{
+				st=ST_ERROR_FUERA_DE_RANGO;
+				imprimir_error(st);
+				return st;
+			}
+		}	
 		else
-			imprimir_error(ST_ERROR_FUERA_DE_RANGO);
-	}
-	else 
-		imprimir_error(ST_ERROR_FUERA_DE_RANGO);
-	}
-
+		{
+			st=ST_ERROR_FUERA_DE_RANGO;
+			imprimir_error(st);
+			return st;
+		}
+	}	
 	if(st==ST_SALIR)
 		st=ST_OK;
 	return st;		
