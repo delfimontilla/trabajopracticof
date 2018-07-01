@@ -1,47 +1,21 @@
-<<<<<<< HEAD
-+1017 ; LEER en la posici髇 de memoria 17
-+2018 ; CARGAR la posici髇 de memoria 18 en el acumulador
-+3117 ; RESTAR al acumulador la posici髇 de memoria 17
-+4215 ; JPMZERO salta a la posici髇 de memoria 15 si el acumulador es 0
-+2018 ; CARGAR la posicion de memoria 18 en el acumulador
-+3021 ; SUMAR al acumulador la posici髇 de memoria 21
-+2118 ; GUARDAR el contenido del acumulador en la posici髇 18
-+1019 ; LEER en la posici髇 de memoria 19
-+2020 ; CARGAR la posici髇 de memoria 20 en el acumulador
-+3119 ; RESTAR al acumulador la posici髇 de memoria 19
-+4112 ; JMPNEG salta a la posici髇 12 si el acumulador es negativo
-+4001 ; JMP salta a la posici髇 01
-+2019 ; CARGAR la posici髇 de memoria 19 en el acumulador
-+2120 ; GUARDAR el contenido del acumulador en la posici髇 20
-+4001 ; JMP salta a la posici髇 01
-+1120 ; ESCRIBIR por pantalla la posici髇 20
-+4500 ; HALT
-+0000 ; Pos. 17 Variable A
-+0000 ; Pos. 18 Variable B
-+0000 ; Pos. 19 Variable D
-+0000 ; Pos. 20 Valor acumulado
-+0001 ; Pos. 21 Incrementos de a 1
-=======
-+1017
-+2018
-+3117
-+4215
-+2018
-+3021
-+2118
-+1019
-+2020
-+3119
-+4112
-+4001
-+2019
-+2120
-+4001
-+1120
-+4500
-+0000
-+0000
-+0000
-+0000
-+0001
->>>>>>> 649781922d972b0116093f5694c3c998d53a4ee7
++0100017 ; LEER en la posici贸n de memoria 17
++0200018 ; CARGAR la posici贸n de memoria 18 en el acumulador
++0310017 ; RESTAR al acumulador la posici贸n de memoria 17
++0420015 ; JPMZERO salta a la posici贸n de memoria 15 si el acumulador es 0
++0200018 ; CARGAR la posicion de memoria 18 en el acumulador
++0300021 ; SUMAR al acumulador la posici贸n de memoria 21
++0210018 ; GUARDAR el contenido del acumulador en la posici贸n 18
++0100019 ; LEER en la posici贸n de memoria 19
++0200020 ; CARGAR la posici贸n de memoria 20 en el acumulador
++0310019 ; RESTAR al acumulador la posici贸n de memoria 19
++0410012 ; JMPNEG salta a la posici贸n 12 si el acumulador es negativo
++0400001 ; JMP salta a la posici贸n 01
++0200019 ; CARGAR la posici贸n de memoria 19 en el acumulador
++0210020 ; GUARDAR el contenido del acumulador en la posici贸n 20
++0400001 ; JMP salta a la posici贸n 01
++0110020 ; ESCRIBIR por pantalla la posici贸n 20
++04500000 ; HALT
++0000000 ; Pos. 17 Variable A
++0000000 ; Pos. 18 Variable B
++0000000 ; Pos. 19 Variable D
++0000000 ; Pos. 20 Valor acumulado
