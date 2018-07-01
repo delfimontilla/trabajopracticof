@@ -1,23 +1,23 @@
-+1022 ; LEER en la posición de memoria 22
-+2022 ; CARGAR la posición de memoria 22 al acumulador
-+3119 ; RESTAR al acumulador la posición de memoria 19
-+4212 ; JMPZERO salta a la posición 12 si el acumulador es cero
-+2019 ; CARGAR la posición de memoria 19 al acumulador
-+3020 ; SUMAR el contenido de la pos. de memoria 20 al acumulador
-+2119 ; GUARDAR el contenido del acumulador en la posición 19
-+1018 ; LEER en la posición de memoria 18
-+2017 ; CARGAR la posición de memoria 17
-+3018 ; SUMAR la posición de memoria 18
-+2117 ; GUARDAR el contenido del acumulador en la posición 17
-+4001 ; JMP salta a la posición 01
-+2017 ; CARGAR la posición de memoria 17
-+3222 ; DIVIDIR el acumulador por el contenido de 22
-+2121 ; GUARDAR el acumulador en la posición 21
-+1121 ; ESCRIBIR por pantalla el contenido de 21
-+4500 ; HALT
-+0000 ; Pos. 17 (valor acumulado)
-+0000 ; Pos. 18 (variable)
-+0000 ; Pos. 19 (contador)
-+0001 ; Pos. 20 (incrementos de a uno)
-+0000 ; Pos. 21 
-+0000 ; Pos. 22 (cantidad)
++0100022 ; LEER en la posición de memoria 22
++0200022 ; CARGAR la posición de memoria 22 al acumulador
++0310019 ; RESTAR al acumulador la posición de memoria 19
++0420012 ; JMPZERO salta a la posición 12 si el acumulador es cero
++0200019 ; CARGAR la posición de memoria 19 al acumulador
++0300020 ; SUMAR el contenido de la pos. de memoria 20 al acumulador
++0210019 ; GUARDAR el contenido del acumulador en la posición 19
++0100018 ; LEER en la posición de memoria 18
++0200017 ; CARGAR la posición de memoria 17
++0300018 ; SUMAR la posición de memoria 18
++0210017 ; GUARDAR el contenido del acumulador en la posición 17
++0400001 ; JMP salta a la posición 01
++0200017 ; CARGAR la posición de memoria 17
++0320022 ; DIVIDIR el acumulador por el contenido de 22
++0210021 ; GUARDAR el acumulador en la posición 21
++0110021 ; ESCRIBIR por pantalla el contenido de 21
++0450000 ; HALT
++0000000 ; Pos. 17 (valor acumulado)
++0000000 ; Pos. 18 (variable)
++0000000 ; Pos. 19 (contador)
++0000001 ; Pos. 20 (incrementos de a uno)
++0000000 ; Pos. 21 
++0000000 ; Pos. 22 (cantidad)
