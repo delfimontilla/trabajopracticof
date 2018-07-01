@@ -50,13 +50,29 @@
 #define MSJ_MEMORIA_OPC "N\t" 
 #define MSJ_MEMORIA_DESC "Simpletron tiene una memoria de N palabras. Si no se da el argumento, por omisión tendrá 50 palabras.\n"
 
-#define MSJ_SALIDA_ARG "-f\t" 
-#define MSJ_SALIDA_OPC "FMT\t" 
-#define MSJ_SALIDA_DESC "Indica el formato de la salida. Si FMT es txt, el formato debe ser texto. Si FMT es bin, el formato debe ser binario, por omisión el formato es texto.\n"
+#define MSJ_ENTRADA_ARG "-i\t" 
+#define MSJ_ENTRADA_OPC "archivo\t" 
+#define MSJ_ENTRADA_DESC "El programa se leerá del archivo pasado como opción, en caso contrario, de stdin.\n"
 
-#define MSJ_ENTRADA_ARG "-\t" 
-#define MSJ_ENTRADA_OPC "FMT:archivo\t" 
-#define MSJ_ENTRADA_DESC "Formato y nombre de archivo. Si FMT es t, el formato debe ser texto. Si FMT es b, el formato debe ser binario, por omisión el formato es texto.\n"
+#define MSJ_ARCHIVO_ARG "-ia\t" 
+
+#define MSJ_ARCHIVO_OPC_BIN "bin\t" 
+#define MSJ_ARCHIVO_DESC_BIN "El archivo de entrada se entenderá como una secuencia binaria de enteros que representan las palabras que forman el programa.\n"
+
+#define MSJ_ARCHIVO_OPC_TXT "txt\t" 
+#define MSJ_ARCHIVO_DESC_TXT "El archivo de entrada se interpretará como secuencia de números, cada uno en una única línea\n"
+
+#define MSJ_SALIDA_ARG "-o\t"
+#define MSJ_SALIDA_OPC "archivo\t" 
+#define MSJ_SALIDA_DESC "El dump se hará en el archivo pasado como opción, si no pasa el argumento, el volcado se hará por stdout.\n"
+
+#define MSJ_SALIDA_ARCH_ARG "-of\t" 
+
+#define MSJ_SALIDA_ARCH_BIN_OPC "bin\t"
+#define MSJ_SALIDA_ARCH_BIN_DESC "El volcado se hará en binario guardando cada elemento de la estructura del Simpletron, además de la memoria.\n"
+
+#define MSJ_SALIDA_ARCH_TXT_OPC "txt\t" 
+#define MSJ_SALIDA_ARCH_TXT_DESC "El volcado se hará en formato de texto imprimiendo los registros y la memoria.\n"
 
 #define TAB_TITULO_OP "Operación\t"
 #define TAB_TITULO_CODE "OpCode\t"

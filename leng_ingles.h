@@ -49,13 +49,28 @@
 #define MSJ_MEMORIA_OPC "N\t" 
 #define MSJ_MEMORIA_DESC "Simpletron has a memory for N words. If no arguments is provided, by default it'll have 50 words.\n"
 
-#define MSJ_SALIDA_ARG "-f\t" 
-#define MSJ_SALIDA_OPC "FMT\t" 
-#define MSJ_SALIDA_DESC "Indicates the format of the output. If FMT is txt, the format must be text. If FMT is bin, the format must be binary, by default the format is text.\n"
+#define MSJ_ENTRADA_ARG "-i\t" 
+#define MSJ_ENTRADA_OPC "file\t" 
+#define MSJ_ENTRADA_DESC "The program will be read from the file provided, otherwise, from stdin.\n"
 
-#define MSJ_ENTRADA_ARG "-\t" 
-#define MSJ_ENTRADA_OPC "FMT:archivo\t" 
-#define MSJ_ENTRADA_DESC "Format and name of the input file. If FMT is t, the format must be text. If FMT is b, the format must be binary, by default the format is text.\n"
+#define MSJ_ARCHIVO_ARG "-ia\t" 
+#define MSJ_ARCHIVO_OPC_BIN "bin\t" 
+#define MSJ_ARCHIVO_DESC_BIN "The input file will be understood as a binary sequence of integers that represent the words that make up the program.\n"
+
+#define MSJ_ARCHIVO_OPC_TXT "txt\t" 
+#define MSJ_ARCHIVO_DESC_TXT "The input file will be interpreted as a sequence of numbers, each one in a single line\n"
+
+#define MSJ_SALIDA_ARG "-o\t"
+#define MSJ_SALIDA_OPC "archivo\t" 
+#define MSJ_SALIDA_DESC "The dump will be done in the file provided, otherwise, the dump will be done by stdout.\n"
+
+#define MSJ_SALIDA_ARCH_ARG "-of\t" 
+
+#define MSJ_SALIDA_ARCH_BIN_OPC "bin\t"
+#define MSJ_SALIDA_ARCH_BIN_DESC "The dump will be done in binary saving every element of the Simpletron structure, in addition to the memory.\n"
+
+#define MSJ_SALIDA_ARCH_TXT_OPC "txt\t" 
+#define MSJ_SALIDA_ARCH_TXT_DESC "The dump will be made in text format by printing the registers and the memory.\n"
 
 #define TAB_TITULO_OP "Operation\t"
 #define TAB_TITULO_CODE "OpCode\t"

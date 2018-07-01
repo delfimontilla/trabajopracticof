@@ -3,13 +3,18 @@
 
 #include <stdio.h>
 
-memoria_t * vector_crear (size_t sz){
+memoria_t * vector_crear (size_t sz)
+{
 	memoria_t *v;
-	v= (memoria_t*)calloc (1,sizeof(memoria_t));
+	v=(memoria_t*)calloc (1,sizeof(memoria_t));
 	if(v==NULL)
+	{
 		return NULL;
+	}
+		
 	v->palabras=(palabra_t *)calloc(1,sz*sizeof(palabra_t));
-	if(v->palabras==NULL){
+	if(v->palabras==NULL)
+	{
 		free(v);
 		return NULL;
 	}
@@ -17,23 +22,26 @@ memoria_t * vector_crear (size_t sz){
 	return v;
 }	
 
-void vector_destruir(memoria_t ** v){
-	if(v&&*v){
-		if ((*v)->palabras)
-			free((*v)->palabras);
+status_t vector_destruir(memoria_t ** v){
+	if(v&&*v)
+	{
+		free((*v)->palabras);
+	}	
 		free(*v);
 		*v=NULL;
-	}
+		return ST_OK;
 }
-
-void vector_iterar (memoria_t *v, void (*func) (void*, palabra_t), void *arg){
+status_t vector_iterar (memoria_t *v, void (*func) (void*, palabra_t), void *arg){
 	size_t i;
 	if(v&&func){
-		for (i=0; i< v->pedido;i++){
+		for (i=0; i< v->pedido;i++)
+		{
 			if(v->palabras[i])
 				(*func)(arg,v->palabras[i]);
 		}
+		return ST_OK;
 	}
+	return ST_ERROR_EJECUCION;
 }
 
 #endif
