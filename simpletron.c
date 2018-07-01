@@ -657,21 +657,22 @@ status_t leer_archivo_stdin(simpletron_t ** simpletron)
 	char * comienzo;
 	char * fin;
 
+	i=0;
 	instruccion = 0;
 
 	if (!simpletron)
 	{
 		return ST_ERROR_PTR_NULO;
 	}
-
  	printf("%s\n",MSJ_BIENVENIDA);	
-	for(i=0; i<(*simpletron)->memoria->pedido;i++)
-	{	
-		printf("%2.i %s \n", i,PREGUNTA);
-    	if(fgets(aux,MAX_CADENA,stdin)==NULL)
-    	{
-    		return ST_ERROR_FUERA_DE_RANGO;
-    	}  	
+ 	while(fgets(aux,MAX_CADENA,stdin)!=NULL)
+ 	{
+ 		if(i>(*simpletron)->memoria->pedido)
+ 		{
+ 			return ST_ERROR_LECTURA;
+ 		}		
+ 		printf("%2.i %s \n", i,PREGUNTA);
+ 	
 	   	if((fin=strrchr(aux,DELIM_COMA))!=NULL)
 	   	{
  			*fin='\0';
@@ -698,19 +699,26 @@ status_t leer_archivo_stdin(simpletron_t ** simpletron)
     	{
     		break;
     	}	
+    	puts("0");
  		if(instruccion<MIN_PALABRA||instruccion>MAX_PALABRA)
  		{
  			return ST_ERROR_FUERA_DE_RANGO;
- 		}
+ 		}    	
+ 		puts("1");
+
  		if(((instruccion&MASK_ORIENTACION1)>>SHIFT_ORIENTACION)>MAX_CANT_OPCODE)
  		{
  			return ST_ERROR_FUERA_DE_RANGO;
  		}
+ 		    	puts("2");
+
  		if((instruccion&MASK_ORIENTACION2)>MAX_CANT_OPERANDO)\
  		{	
  			return ST_ERROR_FUERA_DE_RANGO;
  		}	
+ 		    	puts("3");
  		(*simpletron)->memoria->palabras[i]=instruccion;
+ 		i++;
 	}
 	return ST_OK;
 }
@@ -812,15 +820,20 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
 
 	while(st==ST_OK)
 	{
+		    	puts("a");
 
 		if((simpletron->opcode=(simpletron->memoria->palabras[simpletron->contador_programa]/10000))<0 && simpletron->opcode>MAX_CANT_OPCODE)
 		{
 			return ST_ERROR_FUERA_DE_RANGO;
 		}
+		    	puts("b");
+
 		if((simpletron->operando=(simpletron->memoria->palabras[simpletron->contador_programa]-(simpletron->opcode)*10000))<0 && simpletron->operando>MAX_CANT_OPERANDO)
 		{
 			return ST_ERROR_FUERA_DE_RANGO;
 		}
+		    	puts("c");
+
 					switch (simpletron->opcode)
 					{
 						case (OP_LEER):

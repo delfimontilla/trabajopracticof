@@ -93,7 +93,7 @@ status_t LISTA_destruir(lista_t * plista, status_t (*destructor_simpletron)(simp
 
     siguiente = (*plista)->siguiente;/*Copia en una variable local el puntero al siguiente elemento de la lista.*/
 
-    LISTA_destruir_nodo(plista, destructor_simpletron );/*Destruye el nodo actual*/
+    LISTA_destruir_nodo(plista, destructor_simpletron);/*Destruye el nodo actual*/
     return LISTA_destruir(&siguiente, destructor_simpletron);/*Vuelve a llamarse a si misma, pasandole la direccion del siguiente nodo.*/
 }
 
