@@ -30,7 +30,7 @@
 #define MSJ_OPCODE "opcode"
 #define MSJ_OPERANDO "operando"
 
-#define MSJ_BIENVENIDA "Bienvenide a la Simpletron! Por favor, ingrese su programa una instrucción (o dato) a la vez. Yo escribiré la ubicación y un signo de pregunta (?).Luego usted ingrese la palabra para esa ubicación. Ingrese -99999 para finalizar."
+#define MSJ_BIENVENIDA "Bienvenide a la Simpletron! Por favor, ingrese su programa una instrucción (o dato) a la vez. Yo escribiré la ubicación y un signo de pregunta (?).Luego usted ingrese la palabra para esa ubicación. Ingrese -99999999 para finalizar."
 
 #define MSJ_CARGA_COMPLETA "*** Carga del programa completa ***"
 #define MSJ_COMIENZO_EJECUCION "*** Comienza la ejecución del programa ***"

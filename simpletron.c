@@ -242,11 +242,14 @@ int main(int argc, char *argv[])
    	}
    	if (argumentos.fmt_sal_txt==true)
    	{	
+		puts("a");
 		if((st=LISTA_imprimir(lsimpletron, fsalida,impresor_txt))!=ST_OK)
 	   	{
+	   	   	puts("b");
 	   	   	imprimir_error(st);	
 	   		if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
 	     	{
+	     			   	   	puts("c");
 	  			if(fentrada!=NULL)
 	  	   		{
 	  	   			fclose(fentrada);
@@ -692,24 +695,18 @@ status_t leer_archivo_stdin(simpletron_t ** simpletron)
     	{
     		break;
     	}	
-    	puts("0");
  		if(instruccion<MIN_PALABRA||instruccion>MAX_PALABRA)
  		{
  			return ST_ERROR_FUERA_DE_RANGO;
  		}    	
- 		puts("1");
-
  		if(((instruccion&MASK_ORIENTACION1)>>SHIFT_ORIENTACION)>MAX_CANT_OPCODE)
  		{
  			return ST_ERROR_FUERA_DE_RANGO;
  		}
- 		    	puts("2");
-
  		if((instruccion&MASK_ORIENTACION2)>MAX_CANT_OPERANDO)\
  		{	
  			return ST_ERROR_FUERA_DE_RANGO;
  		}	
- 		    	puts("3");
  		(*simpletron)->memoria->palabras[i]=instruccion;
  		i++;
 	}
@@ -748,11 +745,11 @@ status_t imprimir_archivo_txt(simpletron_t *simpletron, FILE *fsalida)
     fprintf(fsalida,"%s\n", MSJ_REGISTRO);
 	fprintf(fsalida, "%25s: %6d\n",MSJ_ACUM, simpletron->acumulador );
 	fprintf(fsalida, "%25s: %6lu\n",MSJ_CONT_PROG, simpletron->contador_programa );
-	fprintf(fsalida, "%25s: %6d\n",MSJ_INST, simpletron->memoria->palabras[simpletron->contador_programa] );
-	simpletron->opcode = simpletron->memoria->palabras[simpletron->contador_programa] /100;/*divido por 100 entonces como es un int borra los numeros despues de la coma y me queda el entero que quiero (ejemplo, si llega 2598 me queda 25.98 pero se guarda 25)*/
-	simpletron->operando = simpletron->memoria->palabras[simpletron->contador_programa] - (simpletron->opcode*100);/*necesito los ultimos dos entonces al multiplicar opcode por 100 tengo 2500 del ejemplo entonces 2598-2500 da 98 que son los ultimos dos digitos que necesito*/
+	fprintf(fsalida, "%25s: %6d\n",MSJ_INST, simpletron->memoria->palabras[simpletron->contador_programa]);
+	simpletron->opcode=(simpletron->memoria->palabras[simpletron->contador_programa]/10000);
+	simpletron->operando=(simpletron->memoria->palabras[simpletron->contador_programa]-(simpletron->opcode)*10000);
 	fprintf(fsalida, "%25s: %6lu\n",MSJ_OPCODE, simpletron->opcode );
-	fprintf(fsalida, "%25s: %6lu\n",MSJ_OPERANDO, simpletron->operando );
+	fprintf(fsalida, "%25s: %6lu\n",MSJ_OPERANDO, simpletron->operando);
 	fprintf(fsalida,"    ");
 	for (l = 0; l < 10; l++)
 		fprintf(fsalida,"  %i   ",l) ;
@@ -813,108 +810,114 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
 
 	while(st==ST_OK)
 	{
-		    	puts("a");
-
 		if((simpletron->opcode=(simpletron->memoria->palabras[simpletron->contador_programa]/10000))<0 && simpletron->opcode>MAX_CANT_OPCODE)
 		{
 			return ST_ERROR_FUERA_DE_RANGO;
 		}
-		    	puts("b");
-
 		if((simpletron->operando=(simpletron->memoria->palabras[simpletron->contador_programa]-(simpletron->opcode)*10000))<0 && simpletron->operando>MAX_CANT_OPERANDO)
 		{
 			return ST_ERROR_FUERA_DE_RANGO;
 		}
-		    	puts("c");
-
-					switch (simpletron->opcode)
-					{
-						case (OP_LEER):
-							pt=F_OP_LEER;
-							st=p_funciones[pt](simpletron);
-							simpletron->contador_programa++;
-							break;
-						case (OP_ESCRIBIR):
-							pt=F_OP_ESCRIBIR;
-							st=p_funciones[pt](simpletron);
-							simpletron->contador_programa++;
-							break;
-						case (OP_CARGAR):
-							pt=F_OP_CARGAR;
-							st=p_funciones[pt](simpletron);
-							simpletron->contador_programa++;
-							break;
-						case (OP_GUARDAR):
-							pt=F_OP_GUARDAR;
-							st=p_funciones[pt](simpletron);
-							simpletron->contador_programa++;
-							break;
-						case (OP_PCARGAR):
-							pt=F_OP_PCARGAR;
-							st=p_funciones[pt](simpletron);
-							simpletron->contador_programa++;
-							break;
-						case(OP_PGUARDAR):
-							pt=F_OP_PGUARDAR;
-							st=p_funciones[pt](simpletron);
-							simpletron->contador_programa++;
-							break;
-						case(OP_SUMAR):
-							pt=F_OP_SUMAR;
-							st=p_funciones[pt](simpletron);
-							simpletron->contador_programa++;
-							break;
-						case(OP_RESTAR):
-							pt=F_OP_RESTAR;
-							st=p_funciones[pt](simpletron);
-							simpletron->contador_programa++;
-							break;
-						case(OP_DIVIDIR):
-							pt=F_OP_DIVIDIR;
-							st=p_funciones[pt](simpletron);
-							simpletron->contador_programa++;
-							break;
-						case(OP_MULTIPLICAR):
-							pt=F_OP_MULTIPLICAR;
-							st=p_funciones[pt](simpletron);
-							simpletron->contador_programa++;
-							break;
-						case(OP_JMP):
-							pt=F_OP_JMP;
-							st=p_funciones[pt](simpletron);
-							break;
-						case(OP_JMPNEG):
-							pt=F_OP_JMP;
-							if(simpletron->acumulador<0)
-								st=p_funciones[pt](simpletron);
-							else
-								simpletron->contador_programa++;
-							break;
-						case(OP_JMPZERO):
-							pt=F_OP_JMP;
-							if(simpletron->acumulador==0)
-								st=p_funciones[pt](simpletron);
-							else
-								simpletron->contador_programa++;
-							break;
-						case(OP_JNZ):
-							pt=F_OP_JMP;
-							if(simpletron->acumulador!=0)
-								st=p_funciones[pt](simpletron);
-							else
-							 	simpletron->contador_programa++;
-							break;
-						case(OP_DJNZ):
-							pt=F_OP_JMP;
-							st=p_funciones[pt](simpletron);
-							break;
-						case (OP_HALT):
-							st=ST_SALIR;
-							break;
-						default:
-							simpletron->contador_programa++;
-						break;
-					}			
+		switch (simpletron->opcode)
+		{
+			case (OP_LEER):
+				pt=F_OP_LEER;
+				st=p_funciones[pt](simpletron);
+				simpletron->contador_programa++;
+				break;
+			case (OP_ESCRIBIR):
+				pt=F_OP_ESCRIBIR;
+				st=p_funciones[pt](simpletron);
+				simpletron->contador_programa++;
+				break;
+			case (OP_CARGAR):
+				pt=F_OP_CARGAR;
+				st=p_funciones[pt](simpletron);
+				simpletron->contador_programa++;
+				break;
+			case (OP_GUARDAR):
+				pt=F_OP_GUARDAR;
+				st=p_funciones[pt](simpletron);
+				simpletron->contador_programa++;
+				break;
+			case (OP_PCARGAR):
+				pt=F_OP_PCARGAR;
+				st=p_funciones[pt](simpletron);
+				simpletron->contador_programa++;
+				break;
+			case(OP_PGUARDAR):
+				pt=F_OP_PGUARDAR;
+				st=p_funciones[pt](simpletron);
+				simpletron->contador_programa++;
+				break;
+			case(OP_SUMAR):
+				pt=F_OP_SUMAR;
+				st=p_funciones[pt](simpletron);
+				simpletron->contador_programa++;
+				break;
+			case(OP_RESTAR):
+				pt=F_OP_RESTAR;
+				st=p_funciones[pt](simpletron);
+				simpletron->contador_programa++;
+				break;
+			case(OP_DIVIDIR):
+				pt=F_OP_DIVIDIR;
+				st=p_funciones[pt](simpletron);
+				simpletron->contador_programa++;
+				break;
+			case(OP_MULTIPLICAR):
+				pt=F_OP_MULTIPLICAR;
+				st=p_funciones[pt](simpletron);
+				simpletron->contador_programa++;
+				break;
+			case(OP_JMP):
+				pt=F_OP_JMP;
+				st=p_funciones[pt](simpletron);
+				break;
+			case(OP_JMPNEG):
+				pt=F_OP_JMP;
+				if(simpletron->acumulador<0)
+				{
+					st=p_funciones[pt](simpletron);
+				}
+				else
+				{
+					simpletron->contador_programa++;
+				}
+				break;
+			case(OP_JMPZERO):
+				pt=F_OP_JMP;
+				if(simpletron->acumulador==0)
+				{
+					st=p_funciones[pt](simpletron);					
+				}
+				else
+				{
+					simpletron->contador_programa++;
+				}
+				break;
+			case(OP_JNZ):
+				pt=F_OP_JMP;
+				if(simpletron->acumulador!=0)
+				{
+					st=p_funciones[pt](simpletron);	
+				}
+				else
+				{
+				 	simpletron->contador_programa++;					
+				}
+				break;
+			case(OP_DJNZ):
+				pt=F_OP_JMP;
+				st=p_funciones[pt](simpletron);
+				break;
+			case (OP_HALT):
+				st=ST_SALIR;
+				break;
+			default:
+				simpletron->contador_programa++;
+				break;
+		}			
 	}	
 	if(st==ST_SALIR)
 		st=ST_OK;
