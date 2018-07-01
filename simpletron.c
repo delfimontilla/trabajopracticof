@@ -242,14 +242,11 @@ int main(int argc, char *argv[])
    	}
    	if (argumentos.fmt_sal_txt==true)
    	{	
-		puts("a");
 		if((st=LISTA_imprimir(lsimpletron, fsalida,impresor_txt))!=ST_OK)
 	   	{
-	   	   	puts("b");
 	   	   	imprimir_error(st);	
 	   		if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
 	     	{
-	     			   	   	puts("c");
 	  			if(fentrada!=NULL)
 	  	   		{
 	  	   			fclose(fentrada);
@@ -301,6 +298,7 @@ int main(int argc, char *argv[])
 	   		return EXIT_FAILURE;
 	   	}   		
     }
+    puts("d");
 	if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
    	{
 		if(fentrada!=NULL)
@@ -314,10 +312,12 @@ int main(int argc, char *argv[])
 		imprimir_error(st);
 		return EXIT_FAILURE;
    	}	
+   	puts("a");
 	if(fentrada!=NULL)
 	{
         fclose(fentrada);
     }
+    puts("b");
     if(fsalida!=NULL)
     {
 	   	fclose(fsalida);
@@ -519,14 +519,14 @@ status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada){
 
 status_t abrir_archivo_salida (parametros_t * argumentos, FILE ** fsalida){
 	
-	if(argumentos->fmt_sal_txt)
+	if(argumentos->fmt_sal_txt==true)
 	{
 		if((*fsalida=fopen(argumentos->nombre_arch_sal,"wt"))==NULL)
 		{	
 			return ST_ERROR_APERTURA_ARCHIVO;
 		}	
 	}
-	if(argumentos->fmt_sal_bin)
+	else if(argumentos->fmt_sal_bin==true)
 	{
 		if((*fsalida=fopen(argumentos->nombre_arch_sal,"wb"))==NULL)
 		{	
@@ -781,7 +781,7 @@ status_t liberar_memoria(simpletron_t ** simpletron)
 	if (simpletron!=NULL && *simpletron!=NULL){
 		if((*simpletron)->memoria!=NULL)
 		{
-		vector_destruir(&((*simpletron)->memoria));
+			vector_destruir2(&((*simpletron)->memoria),free);
 		}
 
 		(*simpletron)->acumulador=0;

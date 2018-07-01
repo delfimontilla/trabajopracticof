@@ -1,3 +1,5 @@
+#ifndef TDA_LISTA__C
+#define TDA_LISTA__C
 /** 
  * @file tda_lista_rec.c
  * @brief Contiene la implementación, 100% recursiva, de las primitivas de una
@@ -56,12 +58,12 @@ status_t LISTA_destruir_nodo(nodo_t ** pnodo, status_t (*destructor_simpletron)(
         return ST_OK;
 
     simpletron = (*pnodo)->simpletron;/*Se hace una copia local del puntero a la estructura*/
-
+puts("2");
     (*pnodo)->siguiente = NULL;/*Se llevan a NULL los nodos y se libera la memoria pedida para este nodo.*/
     (*pnodo)->simpletron = NULL;
     free(*pnodo);
     *pnodo = NULL;
-
+puts("3");
     return (destructor_simpletron != NULL) ? (*destructor_simpletron)(simpletron) : ST_OK;/*Verifica si ya se pudo destruir simpletron y si no se pudo se destruye.*/
 }
 
@@ -92,7 +94,7 @@ status_t LISTA_destruir(lista_t * plista, status_t (*destructor_simpletron)(simp
         return ST_OK;
 
     siguiente = (*plista)->siguiente;/*Copia en una variable local el puntero al siguiente elemento de la lista.*/
-
+puts("1");
     LISTA_destruir_nodo(plista, destructor_simpletron);/*Destruye el nodo actual*/
     return LISTA_destruir(&siguiente, destructor_simpletron);/*Vuelve a llamarse a si misma, pasandole la direccion del siguiente nodo.*/
 }
@@ -178,14 +180,4 @@ status_t LISTA_recorrer(lista_t pnodo, status_t (*funcion)(simpletron_t *)) /*Re
     return LISTA_recorrer(pnodo->siguiente, funcion);
 }
 
-
-/*****************hacer funcion destruir simpletor, cmp, es_igual, impresor, funcion**************/
-/*
-defino mi funcion como normalmente
-typedef tipo de la funcion * nombregenerico (argumentos);
-int main*(){
-    nombregenerico=nombredefunccion;
-    nombredefunccion=PONER LA FUNCION;
-     y ya la uso como puntero a funcion
-}
-*/
+#endif
