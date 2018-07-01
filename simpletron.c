@@ -298,7 +298,6 @@ int main(int argc, char *argv[])
 	   		return EXIT_FAILURE;
 	   	}   		
     }
-    puts("d");
 	if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
    	{
 		if(fentrada!=NULL)
@@ -312,12 +311,10 @@ int main(int argc, char *argv[])
 		imprimir_error(st);
 		return EXIT_FAILURE;
    	}	
-   	puts("a");
 	if(fentrada!=NULL)
 	{
         fclose(fentrada);
     }
-    puts("b");
     if(fsalida!=NULL)
     {
 	   	fclose(fsalida);

@@ -58,12 +58,10 @@ status_t LISTA_destruir_nodo(nodo_t ** pnodo, status_t (*destructor_simpletron)(
         return ST_OK;
 
     simpletron = (*pnodo)->simpletron;/*Se hace una copia local del puntero a la estructura*/
-puts("2");
     (*pnodo)->siguiente = NULL;/*Se llevan a NULL los nodos y se libera la memoria pedida para este nodo.*/
     (*pnodo)->simpletron = NULL;
     free(*pnodo);
     *pnodo = NULL;
-puts("3");
     return (destructor_simpletron != NULL) ? (*destructor_simpletron)(&simpletron) : ST_OK;/*Verifica si ya se pudo destruir simpletron y si no se pudo se destruye.*/
 }
 
@@ -94,7 +92,6 @@ status_t LISTA_destruir(lista_t * plista, status_t (*destructor_simpletron)(simp
         return ST_OK;
 
     siguiente = (*plista)->siguiente;/*Copia en una variable local el puntero al siguiente elemento de la lista.*/
-puts("1");
     LISTA_destruir_nodo(plista, destructor_simpletron);/*Destruye el nodo actual*/
     return LISTA_destruir(&siguiente, destructor_simpletron);/*Vuelve a llamarse a si misma, pasandole la direccion del siguiente nodo.*/
 }
