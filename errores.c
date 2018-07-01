@@ -2,7 +2,6 @@
 #define ERRORES__C 1
 
 #include <stdio.h>
-#include "errores.h"
 
 const char * errmsg[] = {
 	MSJ_OK,

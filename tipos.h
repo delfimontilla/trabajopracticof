@@ -1,5 +1,5 @@
-#ifndef SIMPLETRON__H
-#define SIMPLETRON__H 1
+#ifndef TIPOS__H
+#define TIPOS__H 1
 
 #include <stdio.h>
 

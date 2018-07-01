@@ -32,7 +32,7 @@
 
 typedef struct nodo {
   struct nodo * siguiente;
-  void * simpletron;
+  simpletron_t * simpletron;
 } nodo_t, * lista_t;
 
 bool_t LISTA_esta_vacia(lista_t);
