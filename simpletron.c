@@ -815,9 +815,9 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
 	{
 		if(simpletron->memoria->palabras[simpletron->contador_programa]>0)
 		{	
-			if(0<(simpletron->opcode=simpletron->memoria->palabras[simpletron->contador_programa]/10000) && simpletron->opcode<MAX_CANT_OPCODE)
+			if((simpletron->opcode=(simpletron->memoria->palabras[simpletron->contador_programa]/10000))>0 && simpletron->opcode<MAX_CANT_OPCODE)
 			{
-				if(0<(simpletron->operando=(simpletron->memoria->palabras[simpletron->contador_programa])-(simpletron->opcode)*10000) && simpletron->operando<MAX_CANT_OPERANDO)
+				if((simpletron->operando=(simpletron->memoria->palabras[simpletron->contador_programa]-(simpletron->opcode)*10000))>0 && simpletron->operando<MAX_CANT_OPERANDO)
 				{	
 					switch (simpletron->opcode)
 					{
