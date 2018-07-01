@@ -340,7 +340,7 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 		if(!(strcmp(argv[ARG_POS_H],ARG_H)))
 			return ST_AYUDA;
 	}
-
+	argumentos->nombre_arch_sal=NOMBRE_SALIDA;
 	if(strcmp(argv[ARG_POS_CANT_PALABRAS],ARG_CANT_PALABRAS))
 	{
 		*cant_palabras=CANT_PALABRAS_DEFAULT;
@@ -351,12 +351,10 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 			if (!(strcmp(argv[ARG_POS_FENTRADA1], ARG_STDIN)))
 			{
 				argumentos->fmt_ent_stdin=true;
-				argumentos->nombre_arch=NOMBRE_SALIDA;
 			}	
 			else 
 			{
 				argumentos->fmt_ent_stdin=false;
-				argumentos->inicio_arch=argv[ARG_POS_FENTRADA1];
 			}	
 			return ST_OK;
 		}	
@@ -365,12 +363,10 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 			if (!(strcmp(argv[ARG_POS_FENTRADA2], ARG_STDIN)))
 			{
 				argumentos->fmt_ent_stdin=true;
-				argumentos->nombre_arch=NOMBRE_SALIDA;
 			}	
 			else 
 			{
 				argumentos->fmt_ent_stdin=false;
-				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
 			}	
 			if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_BIN)))
 			{
@@ -400,7 +396,6 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 			if (!(strcmp(argv[ARG_POS_FENTRADA2], ARG_STDIN)))
 			{
 				argumentos->fmt_ent_stdin=true;
-				argumentos->nombre_arch=NOMBRE_SALIDA;
 			}	
 			else {
 				argumentos->fmt_ent_stdin=false;
@@ -417,7 +412,6 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 				if (!(strcmp(argv[ARG_POS_FENTRADA3], ARG_STDIN)))
 				{
 					argumentos->fmt_ent_stdin=true;
-					argumentos->nombre_arch=NOMBRE_SALIDA;
 				}	
 				else 
 				{
@@ -433,7 +427,6 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 				if (!(strcmp(argv[ARG_POS_FENTRADA3], ARG_STDIN)))
 				{
 					argumentos->fmt_ent_stdin=true;
-					argumentos->nombre_arch=NOMBRE_SALIDA;
 				}	
 				else 
 				{
@@ -525,14 +518,14 @@ status_t abrir_archivo_salida (parametros_t * argumentos, FILE ** fsalida){
 	
 	if(argumentos->fmt_sal_txt)
 	{
-		if((*fsalida=fopen(argumentos->nombre_arch,"wt"))==NULL)
+		if((*fsalida=fopen(argumentos->nombre_arch_sal,"wt"))==NULL)
 		{	
 			return ST_ERROR_APERTURA_ARCHIVO;
 		}	
 	}
 	if(argumentos->fmt_sal_bin)
 	{
-		if((*fsalida=fopen(argumentos->nombre_arch,"wb"))==NULL)
+		if((*fsalida=fopen(argumentos->nombre_arch_sal,"wb"))==NULL)
 		{	
 			return ST_ERROR_APERTURA_ARCHIVO;
 		}	

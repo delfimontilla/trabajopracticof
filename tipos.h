@@ -79,7 +79,7 @@ typedef struct parametros
 	bool_t fmt_sal_txt;/*argumento que indica que el dump se hara en formato de texto*/
 	bool_t fmt_sal_bin;/*argumento que indica que el dump se hara en formato binario*/
 	char * inicio_arch; /*argumento que indica que apunta al archivo de entrada*/
-	char * nombre_arch; /*argumento que indica que el nombre del archivo de entrada*/
+	char * nombre_arch_sal; /*argumento que indica que el nombre del archivo de entrada*/
 }parametros_t; /*estructura con los argumentos que son pasados al momento de ejecucion*/
 
 typedef struct memoria{
