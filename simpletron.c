@@ -781,7 +781,7 @@ status_t liberar_memoria(simpletron_t ** simpletron)
 	if (simpletron!=NULL && *simpletron!=NULL){
 		if((*simpletron)->memoria!=NULL)
 		{
-			vector_destruir2(&((*simpletron)->memoria),free);
+			vector_destruir1(&((*simpletron)->memoria));
 		}
 
 		(*simpletron)->acumulador=0;

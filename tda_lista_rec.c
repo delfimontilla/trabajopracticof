@@ -49,7 +49,7 @@ status_t LISTA_crear_nodo(nodo_t ** pnodo, simpletron_t * simpletron) /*Crea un 
 
 status_t LISTA_destruir_nodo(nodo_t ** pnodo, status_t (*destructor_simpletron)(simpletron_t **))/*Destruye el nodo pasado como parametro y se destruye la simpletron contendia en ese nodo.*/
 {
-    void * simpletron;
+    simpletron_t * simpletron;
 
     if(pnodo == NULL)/*Validacion*/
         return ST_ERROR_PTR_NULO;
@@ -64,7 +64,7 @@ puts("2");
     free(*pnodo);
     *pnodo = NULL;
 puts("3");
-    return (destructor_simpletron != NULL) ? (*destructor_simpletron)(simpletron) : ST_OK;/*Verifica si ya se pudo destruir simpletron y si no se pudo se destruye.*/
+    return (destructor_simpletron != NULL) ? (*destructor_simpletron)(&simpletron) : ST_OK;/*Verifica si ya se pudo destruir simpletron y si no se pudo se destruye.*/
 }
 
 status_t LISTA_destruir_primero(lista_t * plista, status_t (*destructor_simpletron)(simpletron_t **))/*Destruye el primer nodo de la lista*/
@@ -162,20 +162,21 @@ void * LISTA_buscar(lista_t pnodo, void * t, int (*es_igual)(void *, void *)) /*
 
 status_t LISTA_imprimir(lista_t pnodo, FILE * ofile, status_t (*impresor)(simpletron_t *, FILE *)) /*imprime la lista desde el nodo pasado por argumento en el archivo pasado por argumento con la funcion pasada como argumento*/
 {
-    if(pnodo == NULL) /*Validaciones*/
+    if(pnodo == NULL) /*Validacion de fin de la lista*/
+    {
         return ST_OK;
-
+    }    
     (*impresor)(pnodo->simpletron, ofile);/*Imprime el simpletron contenido en el nodo*/
     LISTA_imprimir(pnodo->siguiente, ofile, impresor);/*Imprime el siguiente nodo*/
-
     return ST_OK;
 }
 
 status_t LISTA_recorrer(lista_t pnodo, status_t (*funcion)(simpletron_t *)) /*Recorre la lista desde el nodo pasado como argumento aplicandole la funcion deseada.*/
 {
     if(pnodo == NULL)
-        return ST_OK;
-
+    {
+        return ST_OK;        
+    }
     (*funcion)(pnodo->simpletron);
     return LISTA_recorrer(pnodo->siguiente, funcion);
 }
