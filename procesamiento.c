@@ -9,9 +9,10 @@ status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada){
 	char aux[MAX_CADENA];
 	char * comienzo;
 	char * fin;
-
+puts("0");
 	if((strcpy(aux,argumentos->inicio_arch))==NULL)
 	{
+puts("1");
 		return ST_ERROR_APERTURA_ARCHIVO;
 	}
 	for (comienzo = argumentos->inicio_arch; *comienzo!=DELIM_2PUNTOS; comienzo++)
@@ -24,10 +25,11 @@ status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada){
 			argumentos->fmt_ent_bin=false;
 			if((*fentrada=fopen(comienzo,"rt"))==NULL)
 			{
+				puts("2");
 				return ST_ERROR_APERTURA_ARCHIVO;
 			}
 		}	
-		if(!(strcmp(aux,FMT_B)))
+		else if(!(strcmp(aux,FMT_B)))
 		{
 			argumentos->fmt_ent_bin=true;
 			argumentos->fmt_ent_txt=false;
@@ -43,6 +45,7 @@ status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada){
 		argumentos->fmt_ent_bin=false;
 		if((*fentrada=fopen(comienzo,"rt"))==NULL)
 		{
+			puts("3");
 			return ST_ERROR_APERTURA_ARCHIVO;
 		}	
 	}

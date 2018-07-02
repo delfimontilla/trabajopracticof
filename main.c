@@ -344,55 +344,61 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 			return ST_AYUDA;
 	}
 	argumentos->nombre_arch_sal=NOMBRE_SALIDA;
-	if(strcmp(argv[ARG_POS_CANT_PALABRAS],ARG_CANT_PALABRAS))
+	if(strcmp(argv[ARG_POS_CANT_PALABRAS],ARG_CANT_PALABRAS)) /*comprueba si se pasa la cantidad de palabras*/
 	{
 		*cant_palabras=CANT_PALABRAS_DEFAULT;
-		if(strcmp(argv[ARG_POS_FSALIDA1],ARG_FSALIDA))
+		if(strcmp(argv[ARG_POS_FSALIDA1],ARG_FSALIDA))/*comprueba si se especifica el formato de salida */
 		{
-			argumentos->fmt_sal_txt=true;
+			argumentos->fmt_sal_txt=true; 
 			argumentos->fmt_sal_bin=false;
-			if (!(strcmp(argv[ARG_POS_FENTRADA1], ARG_STDIN)))
+			if (!(strcmp(argv[ARG_POS_FENTRADA1], ARG_STDIN)))/*comprueba si la entrada es por stdin en caso de no pasar la cantidad palabras o formato de salida*/
 			{
 				argumentos->fmt_ent_stdin=true;
 			}	
 			else 
 			{
 				argumentos->fmt_ent_stdin=false;
+				argumentos->inicio_arch=argv[ARG_POS_FENTRADA1];
 			}	
 			return ST_OK;
 		}	
 		else 
 		{
-			if (!(strcmp(argv[ARG_POS_FENTRADA2], ARG_STDIN)))
+			if (!(strcmp(argv[ARG_POS_FENTRADA2], ARG_STDIN)))/*comprueba si la entrada es por stdin en caso de no pasar la cantidad palabras pero si el formato de salida*/
 			{
 				argumentos->fmt_ent_stdin=true;
 			}	
 			else 
 			{
 				argumentos->fmt_ent_stdin=false;
+				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
 			}	
-			if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_BIN)))
+			if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_BIN)))/*comprueba si el formato de salida es bin*/
 			{
 				argumentos->fmt_sal_txt=false;
 				argumentos->fmt_sal_bin=true;
+				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
 				return ST_OK;
 			}	
-			else if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_TXT)))
+			else if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_TXT)))/*comprueba si el formato de salida es txt*/
 			{
 				argumentos->fmt_sal_txt=true;
 				argumentos->fmt_sal_bin=false;
+				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
 				return ST_OK;
 			}	
 		}
 	}	
 
-	else 
+	else /*caso de especificar la cantidad de palabras*/
 	{
 		*cant_palabras = strtol(argv[ARG_POS_CANT_PALABRAS_NUM], &pc, 10);
 		if(*cant_palabras< MIN_CANT_PALABRA || *pc!='\0' || *cant_palabras> MAX_CANT_PALABRA)
+		{
 			return ST_ERROR_CANT_PALABRAS;
-		
-		if(strcmp(argv[ARG_POS_FSALIDA2],ARG_FSALIDA))
+		}
+			
+		if(strcmp(argv[ARG_POS_FSALIDA2],ARG_FSALIDA))/*comprueba si se indica el formato de salida */
 		{
 			argumentos->fmt_sal_txt=true;
 			argumentos->fmt_sal_bin=false;
