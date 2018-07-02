@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+/*Contiene los prototipos de las funciones que crean, ejecutan y destruyen una simpletron*/
+
 status_t inicializar_simpletron (simpletron_t **simpletron, size_t cant_palabras);
 status_t liberar_memoria(simpletron_t ** simpletron);
 status_t ejecutar_simpletron (simpletron_t * simpletron);

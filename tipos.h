@@ -4,15 +4,17 @@
 #include <stdio.h>
 
 /*define un tipo de dato int, 
-un tipo enumerativo para las operaciones, 
-y una estructura para la Simpletron*/
+tipos enumerativos para: las operaciones,
+los status, el vector de punteros a las funciones 
+y un bool; tambien se definen estructuras para: 
+los argumentos, la memoria y la Simpletron*/
 
 typedef int palabra_t;
 
 typedef enum
 {
-	ST_OK,/*RV_SUCCESS*/
-	ST_ERROR_PTR_NULO,/*RV_ILLEGAL*/
+	ST_OK,
+	ST_ERROR_PTR_NULO,
 	ST_ERROR_CANT_ARG,
 	ST_ERROR_FUERA_DE_RANGO,
 	ST_ERROR_LECTURA,

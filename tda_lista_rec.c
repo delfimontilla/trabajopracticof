@@ -15,100 +15,127 @@
  * ---------------------------------------------------------------------------
  */
 
-/**Se modificó del original creado por PATRICIO MORENO cada vez que dice dato por simpletron para que sea más acorde a lo que se hace en el resto del programa.**/
+/*Se modificó del original creado por PATRICIO MORENO; se cambio dato 
+por simpletron, con su correspondiente tipo, y los status_t de las funciones aux
+a las que se llama con su correspondiente formato.
+Esto tiene como objetivo mas claridad al leer el programa completo.*/
+
 #include <stdlib.h>
 
-bool_t LISTA_esta_vacia(lista_t lista)/*Devuelve TRUE si es está vacía, y false si contiene algo. Usamos NULL cuando  la lista está creada pero esta vacía*/ 
+bool_t LISTA_esta_vacia(lista_t lista)
+/*Devuelve true si es está vacía, y false si contiene algo. Usamos NULL cuando la lista está creada pero esta vacía*/ 
 {
     return lista == NULL;
 }
 
-status_t LISTA_crear(lista_t * plista) /*Crea una lista. Devuelve ST_ERROR_PTR_NULO(1) cuando la lista está ya creada, si no la crea y devuelvo ST_OK(0)*/
+status_t LISTA_crear(lista_t * plista) 
+/*Crea una lista. Devuelve ST_ERROR_PTR_NULO en caso de no pasarle un argumento valido, sino la crea y devuelvo ST_OK*/
 {
     if(plista == NULL)
+    {
         return ST_ERROR_PTR_NULO;
-
+    }
     *plista = NULL;
-
     return ST_OK;
 }
 
-status_t LISTA_crear_nodo(nodo_t ** pnodo, simpletron_t * simpletron) /*Crea un nodo y le coloca el valor del simpletron que se quiere.*/
+status_t LISTA_crear_nodo(nodo_t ** pnodo, simpletron_t * simpletron) 
+/*Crea un nodo dandole memoria dinamica y le coloca la simpletron pasada*/
 {
-    if(pnodo == NULL) 
+    if(pnodo == NULL)
+    {
         return ST_ERROR_PTR_NULO;
-
+    }
     if((*pnodo = (nodo_t *)calloc(1, sizeof(nodo_t))) == NULL)/*Se crea la memoria para el nodo, y se valida.*/
-        return ST_ERROR_NO_MEM;
-
+    {
+        return ST_ERROR_NO_MEM;    
+    }
     (*pnodo)->siguiente = NULL;/*Se pone el siguiente nodo en NULL*/
     (*pnodo)->simpletron = simpletron; /*Se le guarda el valor de la simpletron*/
 
     return ST_OK;
 }
 
-status_t LISTA_destruir_nodo(nodo_t ** pnodo, status_t (*destructor_simpletron)(simpletron_t **))/*Destruye el nodo pasado como parametro y se destruye la simpletron contendia en ese nodo.*/
+status_t LISTA_destruir_nodo(nodo_t ** pnodo, status_t (*destructor_simpletron)(simpletron_t **))
+/*Destruye el nodo pasado como primer parametro, 
+liberando la memoria con la funcion del segundo argumento*/
 {
     simpletron_t * simpletron;
 
-    if(pnodo == NULL)/*Validacion*/
-        return ST_ERROR_PTR_NULO;
-
+    if(pnodo == NULL)
+    {
+        return ST_ERROR_PTR_NULO;        
+    }
     if(LISTA_esta_vacia(*pnodo))/*Verifica si el nodo ya está vacio, si lo está, ya sale de la función*/
-        return ST_OK;
+    {
+        return ST_OK;        
+    }
     simpletron = (*pnodo)->simpletron;/*Se hace una copia local del puntero a la estructura*/
-    (*pnodo)->siguiente = NULL;/*Se llevan a NULL los nodos y se libera la memoria pedida para este nodo.*/
+    (*pnodo)->siguiente = NULL;/*Se ponen en NULL los punteros*/
     (*pnodo)->simpletron = NULL;
-    
     free(*pnodo);
     *pnodo = NULL;
-    return (destructor_simpletron != NULL) ? (*destructor_simpletron)(&simpletron) : ST_OK;/**/
+    return (destructor_simpletron != NULL) ? (*destructor_simpletron)(&simpletron) : ST_OK;
 }
 
-status_t LISTA_destruir_primero(lista_t * plista, status_t (*destructor_simpletron)(simpletron_t **))/*Destruye el primer nodo de la lista*/
+status_t LISTA_destruir_primero(lista_t * plista, status_t (*destructor_simpletron)(simpletron_t **))
+/*Destruye el primer nodo de la lista*/
 {
     nodo_t * primero;
 
-    if(plista == NULL)/*Valida*/
+    if(plista == NULL)
+    {
         return ST_ERROR_PTR_NULO;
-
+    }
     if(*plista == NULL)/* es equivalente a LISTA_esta_vacia(*plista) */
-        return ST_OK;
-
+    {
+        return ST_OK;        
+    }
     primero = *plista;/*Copia a una variable local la direccion de lo que quiero destruir.*/
     *plista = (*plista)->siguiente; /*Copia en el primer nodo el siguiente nodo.*/
 
-    return LISTA_destruir_nodo(&primero, destructor_simpletron);/*Llama a la funcion destruir_nodo para que destruya el nodo deseada. Se manda la dirección por medio de la variable local.*/
+    return LISTA_destruir_nodo(&primero, destructor_simpletron);
+    /*Llama a la funcion LISTA_destruir_nodo para que destruya el nodo deseado. 
+    Se manda la dirección por medio de la variable local.*/
 }
 
-status_t LISTA_destruir(lista_t * plista, status_t (*destructor_simpletron)(simpletron_t **))/*Destruye toda la lista. Se le pasa por argumento el primer nodo de la lista y el puntero a funcion.*/
+status_t LISTA_destruir(lista_t * plista, status_t (*destructor_simpletron)(simpletron_t **))
+/*Destruye toda la lista. Se le pasa por argumento el puntero a la lista 
+y el puntero a funcion para liberar memoria.*/
 {
     nodo_t * siguiente;
 
-    if(plista == NULL)/*Validaciones*/
+    if(plista == NULL)
+    {
         return ST_ERROR_PTR_NULO;
-
+    }
     if(LISTA_esta_vacia(*plista))
-        return ST_OK;
-    
+    {
+        return ST_OK;        
+    }  
     siguiente = (*plista)->siguiente;/*Copia en una variable local el puntero al siguiente elemento de la lista.*/
     LISTA_destruir_nodo(plista, destructor_simpletron);/*Destruye el nodo actual*/
-    return LISTA_destruir(&siguiente, destructor_simpletron);/*Vuelve a llamarse a si misma, pasandole la direccion del siguiente nodo.*/
+    return LISTA_destruir(&siguiente, destructor_simpletron);
+    /*Vuelve a llamarse a si misma, pasandole la direccion del siguiente nodo.*/
 }
 
-status_t LISTA_insertar_al_ppio(lista_t * plista, simpletron_t * simpletron) /*Inserta al principio de la lista un nuevo nodo con su estructura.*/
+status_t LISTA_insertar_al_ppio(lista_t * plista, simpletron_t * simpletron) 
+/*Inserta al principio de la lista un nuevo nodo con su estructura.*/
 {
     nodo_t * nuevo;
     status_t st;
 
-    if(plista == NULL) /*Validaciones*/
-        return ST_ERROR_PTR_NULO;
-
-    if((st = LISTA_crear_nodo(&nuevo, simpletron)) != ST_OK)/*Crea el nodo y si llega a tener un error  devuelve ese error. */
-        return st;
-
-    nuevo->siguiente = *plista;/*copio en una variable local en el siguiente nodo para luego copiar en el primer nodo lo conseguido en crear_nodo*/
-    *plista = nuevo;
+    if(plista == NULL)
+    {
+        return ST_ERROR_PTR_NULO;        
+    }
+    if((st = LISTA_crear_nodo(&nuevo, simpletron)) != ST_OK)
+    /*Crea el nodo y si llega a tener un error devuelve ese error. */
+    {
+        return st;  
+    }
+    nuevo->siguiente = *plista; /*se apunta a la lista original con miembro siguiente del nuevo nodo creado*/
+    *plista = nuevo; /*el nuevo nodo es el comienzo de la lista*/
 
     return ST_OK;
 }
@@ -116,27 +143,35 @@ status_t LISTA_insertar_al_ppio(lista_t * plista, simpletron_t * simpletron) /*I
 status_t LISTA_insertar_al_final(lista_t * plista, simpletron_t * simpletron) /*Inserta un nodo al final de la lista*/ 
 {
     if(plista == NULL)
-        return ST_ERROR_PTR_NULO;
-
-    if(LISTA_esta_vacia(*plista)) /*Si el nodo está vacio lo inserta delante de este*/
-        return LISTA_insertar_al_ppio(plista, simpletron);
+    {
+        return ST_ERROR_PTR_NULO;        
+    }
+    if(LISTA_esta_vacia(*plista)) /*Si la siguiente posicion de la lista está vacia lo inserta ahi*/
+    {
+        return LISTA_insertar_al_ppio(plista, simpletron);  
+    }
 
     return LISTA_insertar_al_final(&((*plista)->siguiente), simpletron);/*Avanza al siguiente nodo llamandose a si misma.*/
 }
 
-status_t LISTA_insertar_decreciente(lista_t * plista, simpletron_t * simpletron, int (*cmp)/*Compare*/(void *, void *)) /*Inserta un simpletron en orden decreciente.*/
+status_t LISTA_insertar_decreciente(lista_t * plista, simpletron_t * simpletron, int (*cmp)/*Compare*/(void *, void *)) 
+/*Inserta un simpletron en orden decreciente.*/
 {
     status_t st;
     nodo_t * nuevo;
 
     if(plista == NULL)
-        return ST_ERROR_PTR_NULO;
-
-    if(LISTA_esta_vacia(*plista) || (*cmp)( (*plista)->simpletron, simpletron) < 0 ) /*Si el puntero es al último de la lista o si lo que ingreso es mas grande????????????????? que lo que está en esa posicion se crea el nodo y se introduce la estructura. */
+    {
+        return ST_ERROR_PTR_NULO;        
+    }
+    if(LISTA_esta_vacia(*plista) || (*cmp)( (*plista)->simpletron, simpletron) < 0 ) 
+    /*Si el puntero es al último de la lista o si lo que ingreso es mas grande que lo que está en esa posicion 
+    se crea el nodo y se introduce la estructura. */
     {
         if((st = LISTA_crear_nodo(&nuevo, simpletron)) != ST_OK)
-            return st;
-
+        {
+            return st;            
+        }
         nuevo->siguiente = *plista;
         *plista = nuevo;
 
@@ -146,31 +181,37 @@ status_t LISTA_insertar_decreciente(lista_t * plista, simpletron_t * simpletron,
     return LISTA_insertar_decreciente(&((*plista)->siguiente), simpletron, cmp);
 }
 
-void * LISTA_buscar(lista_t pnodo, void * t, int (*es_igual)(void *, void *)) /*Busca el nodo que pido. Recibe como argumento el nodo donde me paro, el nodo que quiero y un puntero a una función que compara dos nodos y dice si son iguales.*/
+void * LISTA_buscar(lista_t pnodo, void * t, int (*es_igual)(void *, void *)) 
+/*Busca una simpletron. Recibe como argumento un nodo de mi lista, 
+el dato a encontrar y un puntero a una función que compara y dice si son iguales. 
+Retorna un puntero al dato (la simpletron)*/
 {
-    if(pnodo == NULL)/*validaciones*/
-        return NULL;
-
-    if((*es_igual)(t, pnodo->simpletron))/*Se fija si el nodo donde estoy es igual a lo que quiero, si es así, devuelvo ese nodo.*/
+    if(pnodo == NULL)
+    {
+        return NULL;        
+    }
+    if((*es_igual)(t, pnodo->simpletron))
+    {
         return pnodo->simpletron;
-
-    return LISTA_buscar(pnodo->siguiente, t, es_igual);/*Si no lo encuentra se vuelve a llamar*/
+    }
+    return LISTA_buscar(pnodo->siguiente, t, es_igual);/*Busca en el nodo siguiente*/
 }
 
-status_t LISTA_imprimir(lista_t pnodo, FILE * ofile, status_t (*impresor)(simpletron_t *, FILE *)) /*imprime la lista desde el nodo pasado por argumento en el archivo pasado por argumento con la funcion pasada como argumento*/
+status_t LISTA_imprimir(lista_t pnodo, FILE * ofile, status_t (*impresor)(simpletron_t *, FILE *)) 
+/*Imprime la lista el nodo en el archivo pasado por argumento con la funcion (*impresor)*/
 {
     if(pnodo == NULL) /*Validacion de fin de la lista*/
     {
         return ST_OK;
     }    
-    (*impresor)(pnodo->simpletron, ofile);/*Imprime el simpletron contenido en el nodo*/
+    (*impresor)(pnodo->simpletron, ofile); /*Imprime la simpletron contenida en el nodo*/
     LISTA_imprimir(pnodo->siguiente, ofile, impresor);/*Imprime el siguiente nodo*/
     return ST_OK;
 }
 
-status_t LISTA_recorrer(lista_t pnodo, status_t (*funcion)(simpletron_t *)) /*Recorre la lista desde el nodo pasado como argumento aplicandole la funcion deseada.*/
+status_t LISTA_recorrer(lista_t pnodo, status_t (*funcion)(simpletron_t *)) 
+/*Recorre la lista desde el nodo pasado como argumento aplicandole la funcion deseada.*/
 {
-
     if(pnodo == NULL)
     {
         return ST_OK;        

@@ -22,6 +22,7 @@
 #include "main.h"
 #include "tda_lista.h"
 #include "tda_lista_rec.c"
+#include "tda_vector.h"
 #include "tda_vector.c"
 #include "simpletron.h"
 #include "simpletron.c"
@@ -37,7 +38,8 @@ int main(int argc, char *argv[])
     status_t st;
     FILE *fentrada, *fsalida;
 
-    size_t i,l,posicion_arch;
+    size_t i,l;
+    size_t posicion_arch; /*el numero de argc que le corresponde al primer archivo en la linea de comando*/
 
     status_t (*destructor_simpletron)(simpletron_t**)=liberar_memoria;
     status_t (*impresor_txt)(simpletron_t *, FILE *)=imprimir_archivo_txt;
@@ -68,7 +70,7 @@ int main(int argc, char *argv[])
     	return EXIT_FAILURE;
     }
    
-	for(i=0; posicion_arch+i<argc; i++)
+	for(i=0; posicion_arch+i<argc; i++) /*lectura y cargar de archivos en una lista*/
 	{
 		l=strlen(argumentos.inicio_arch);
 		if((st=inicializar_simpletron(&simpletron, cant_palabras))!=ST_OK)
@@ -213,7 +215,7 @@ int main(int argc, char *argv[])
 		argumentos.inicio_arch+=l+1;
 	}
 
- 	if((st=LISTA_recorrer(lsimpletron, ejecutar)!=ST_OK))
+ 	if((st=LISTA_recorrer(lsimpletron, ejecutar)!=ST_OK)) /*ejecucion de la simpletron de cada nodo de la lista*/
  	{
    		imprimir_error(st);
      	if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
@@ -307,7 +309,7 @@ int main(int argc, char *argv[])
 	   		return EXIT_FAILURE;
 	   	}   		
     }
-	if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)
+	if((st=LISTA_destruir(&lsimpletron,destructor_simpletron))!=ST_OK)/*liberacion de la memoria pedida*/
    	{
 		if(fentrada!=NULL)
 		{
@@ -332,11 +334,11 @@ int main(int argc, char *argv[])
 }
 
 
-status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, size_t *cant_palabras, size_t *j)
+status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, size_t *cant_palabras, size_t *posicion_arch)
  /*recibe arc y argv para realizar las validaciones correspondientes a su cantidad y contenido;
- además recibe el puntero a cant_palabras (cantidad de instrucciones) para cargarle su contenido
- y los dobles punteros al archivo de entrada para abrirlo en caso de ser necesario,
- y al archivo de salida para crearlo en caso de así especificarlo.*/
+ además recibe el puntero a la estructura de argumentos para cargarle el formato que fue indicado para la entrada y salida de
+ datos, recibe el puntero a cant_palabras (cantidad de instrucciones) para cargarle su contenido
+ y el puntero a posicion_arch para cargarle el numero de la posicion del primer archivo*/
 {
 	char *pc=NULL;
 		
@@ -366,7 +368,7 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 			{
 				argumentos->fmt_ent_stdin=false;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA1];
-				*j=ARG_POS_FENTRADA1;
+				*posicion_arch=ARG_POS_FENTRADA1;
 			}	
 			return ST_OK;
 		}	
@@ -380,14 +382,14 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 			{
 				argumentos->fmt_ent_stdin=false;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
-				*j=ARG_POS_FENTRADA2;
+				*posicion_arch=ARG_POS_FENTRADA2;
 			}	
 			if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_BIN)))/*comprueba si el formato de salida es bin*/
 			{
 				argumentos->fmt_sal_txt=false;
 				argumentos->fmt_sal_bin=true;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
-				*j=ARG_POS_FENTRADA2;
+				*posicion_arch=ARG_POS_FENTRADA2;
 				return ST_OK;
 			}	
 			else if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_TXT)))/*comprueba si el formato de salida es txt*/
@@ -395,7 +397,7 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 				argumentos->fmt_sal_txt=true;
 				argumentos->fmt_sal_bin=false;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
-				*j=ARG_POS_FENTRADA2;
+				*posicion_arch=ARG_POS_FENTRADA2;
 				return ST_OK;
 			}	
 		}
@@ -421,7 +423,7 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 				argumentos->fmt_ent_stdin=false;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
 			}	
-			*j=ARG_POS_FENTRADA2;
+			*posicion_arch=ARG_POS_FENTRADA2;
 			return ST_OK;
 		}	
 		else 
@@ -440,7 +442,7 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 					argumentos->inicio_arch=argv[ARG_POS_FENTRADA3];
 					
 				}	
-				*j=ARG_POS_FENTRADA3;
+				*posicion_arch=ARG_POS_FENTRADA3;
 				return ST_OK;
 			}	
 			if(!(strcmp(argv[ARG_POS_FSALIDA2_TIPO],OPCION_TXT)))
@@ -458,7 +460,7 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 				
 
 				}	
-				*j=ARG_POS_FENTRADA3;
+				*posicion_arch=ARG_POS_FENTRADA3;
 				return ST_OK;
 			}	
 		}
@@ -468,7 +470,7 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 
 
 status_t imprimir_error(status_t st)
-/*Imprime el error correspondiente*/
+/*Imprime el error correspondiente al status pasado*/
 {
     fprintf(stderr, "%s\n", errmsg[st]);
 	return ST_OK;
