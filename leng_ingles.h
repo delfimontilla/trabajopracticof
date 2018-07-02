@@ -18,6 +18,7 @@
 #define MSJ_ERROR_NO_NUMERICO " it's not a number"
 #define MSJ_ERROR_NADA_QUE_CARGAR " there's nothing to save"
 #define MSJ_OK "OK"
+#define MSJ_ERROR_EJECUCION "vector iteration"
 #define MSJ_SALIR "Exit"
 #define MSJ_AYUDA "Help finished"
 
