@@ -35,6 +35,10 @@
 #define ARG_CANT_PALABRAS "-m"
 #define ARG_FSALIDA "-f"
 
+
+#define TT "t:"
+#define BB "b:"
+
 #define FIN -99999999
 #define MIN_PALABRA -9999999
 #define MAX_PALABRA 9999999

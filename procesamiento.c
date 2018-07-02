@@ -6,46 +6,53 @@
 
 status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada){
 	
-	char aux[MAX_CADENA];
+	char aux1[MAX_CADENA];
+	char aux2[2];/*HARCODEEEEEEEEEEEO*/
 	char * comienzo;
 	char * fin;
-puts("0");
-	if((strcpy(aux,argumentos->inicio_arch))==NULL)
+
+	if((strcpy(aux1,argumentos->inicio_arch))==NULL)
 	{
-puts("1");
 		return ST_ERROR_APERTURA_ARCHIVO;
 	}
-	for (comienzo = argumentos->inicio_arch; *comienzo!=DELIM_2PUNTOS; comienzo++)
-	{}
-   	if((fin=strrchr(aux,DELIM_2PUNTOS))!=NULL)
-   	{
-		*fin='\0';
-		if(!(strcmp(aux,FMT_T))){
-			argumentos->fmt_ent_txt=true;
-			argumentos->fmt_ent_bin=false;
-			if((*fentrada=fopen(comienzo,"rt"))==NULL)
+ 	if(!(memcpy(aux2,argumentos->inicio_arch, 2)))
+ 	{
+		return ST_ERROR_APERTURA_ARCHIVO;
+	}
+ 	if(!(strcmp(aux2,TT)) || !(strcmp(aux2, BB))){
+
+		for (comienzo = argumentos->inicio_arch; *comienzo!=DELIM_2PUNTOS; comienzo++)
+		{}
+		comienzo++;
+
+	   	if((fin=strrchr(aux1,DELIM_2PUNTOS))!=NULL)
+	   	{
+			*fin='\0';
+			if(!(strcmp(aux1,FMT_T))){
+				argumentos->fmt_ent_txt=true;
+				argumentos->fmt_ent_bin=false;
+				if((*fentrada=fopen(comienzo,"rt"))==NULL)
+				{
+					return ST_ERROR_APERTURA_ARCHIVO;
+				}
+			}	
+			else if(!(strcmp(aux1,FMT_B)))
 			{
-				puts("2");
-				return ST_ERROR_APERTURA_ARCHIVO;
-			}
-		}	
-		else if(!(strcmp(aux,FMT_B)))
-		{
-			argumentos->fmt_ent_bin=true;
-			argumentos->fmt_ent_txt=false;
-			if((*fentrada=fopen(comienzo,"rb"))==NULL)
-			{
-				return ST_ERROR_APERTURA_ARCHIVO;
-			}
-		}		
+				argumentos->fmt_ent_bin=true;
+				argumentos->fmt_ent_txt=false;
+				if((*fentrada=fopen(comienzo,"rb"))==NULL)
+				{
+					return ST_ERROR_APERTURA_ARCHIVO;
+				}
+			}		
+		}
 	}
 	else
 	{
 		argumentos->fmt_ent_txt=true;
 		argumentos->fmt_ent_bin=false;
-		if((*fentrada=fopen(comienzo,"rt"))==NULL)
+		if((*fentrada=fopen(argumentos->inicio_arch,"rt"))==NULL)
 		{
-			puts("3");
 			return ST_ERROR_APERTURA_ARCHIVO;
 		}	
 	}
@@ -109,7 +116,7 @@ status_t leer_archivo_txt(simpletron_t ** simpletron, FILE *fentrada)
 		return ST_ERROR_PTR_NULO;
 	}
 
- 	while(fgets(aux,MAX_CADENA,stdin)!=NULL)
+ 	while(fgets(aux,MAX_CADENA,fentrada)!=NULL)
  	{
  		if(i>(*simpletron)->memoria->pedido)
  		{
@@ -260,7 +267,7 @@ status_t imprimir_archivo_txt(simpletron_t *simpletron, FILE *fsalida)
 	}
     
     fprintf(fsalida,"%s\n", MSJ_REGISTRO);
-	fprintf(fsalida, "%25s: %6d\n",MSJ_ACUM, simpletron->acumulador );
+	fprintf(fsalida, "%25s: %6X\n",MSJ_ACUM, simpletron->acumulador );
 	fprintf(fsalida, "%25s: %6lu\n",MSJ_CONT_PROG, simpletron->contador_programa );
 	fprintf(fsalida, "%25s: %6d\n",MSJ_INST, simpletron->memoria->palabras[simpletron->contador_programa]);
 	simpletron->opcode=(simpletron->memoria->palabras[simpletron->contador_programa]/10000);
@@ -276,7 +283,7 @@ status_t imprimir_archivo_txt(simpletron_t *simpletron, FILE *fsalida)
     	{
 	 		fprintf(fsalida,"\n%02i  ",i);
 		}		  
-		fprintf(fsalida,"%+05i ",simpletron->memoria->palabras[i] );
+		fprintf(fsalida,"%05X ",simpletron->memoria->palabras[i] );
 	}
     fprintf(fsalida,"\n");
     

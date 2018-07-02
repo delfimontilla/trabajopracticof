@@ -7,6 +7,6 @@
 +0450000 ; HALT
 +0000000 ; nop
 +0000000 ; nop
-+0000001 ; Variable A
-+0000002 ; Variable B
++0000000 ; Variable A
++0000000 ; Variable B
 +0000000 ; Resultado

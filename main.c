@@ -65,8 +65,13 @@ int main(int argc, char *argv[])
     	imprimir_error(st);
     	return EXIT_FAILURE;
     }
-    while(argumentos.inicio_arch!= NULL)
-    {
+   
+
+
+
+/*comienzo while(argumentos.inicio_arch!= NULL)
+{*/
+
 		if((st=inicializar_simpletron(&simpletron, cant_palabras))!=ST_OK)
 		{
      		imprimir_error(st);
@@ -122,7 +127,6 @@ int main(int argc, char *argv[])
 					return EXIT_FAILURE;
 	     		}
 		   	}
-		   	break;
 		}	
 	   	if (argumentos.fmt_ent_stdin==false)
 	    {
@@ -203,9 +207,20 @@ int main(int argc, char *argv[])
 					return EXIT_FAILURE;
 	     		}
 		   	}
-		}   	
-	   	argumentos.inicio_arch++;
-	}
+		}   
+
+/*
+l=strlen(argumentos.inic_arch);
+argumentos.inic_arch+=l+1;
+}
+*/
+
+
+
+
+
+
+	
  	if((st=LISTA_recorrer(lsimpletron, ejecutar)!=ST_OK))
  	{
    		imprimir_error(st);
