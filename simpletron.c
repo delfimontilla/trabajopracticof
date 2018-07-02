@@ -17,11 +17,11 @@ status_t (*p_funciones[12])(simpletron_t *) = {op_leer,
 	op_jmp,
 	op_djnz};
 
-status_t inicializar_simpletron (simpletron_t **simpletron, size_t cant_palabras)
+status_t inicializar_simpletron (simpletron_t ** simpletron, size_t cant_palabras)
 /*Esta funcion recibe un doble puntero a la estructura simpletron para poder modificar su contenido, 
 y un size_t de cant_palabras para darle la memoria dinamica necesaria al vector de palabras*/	
 {
-	if (!simpletron)
+	if (!simpletron)/*Validaciones*/ 
 	{
 		return ST_ERROR_PTR_NULO;
 	}	
@@ -29,16 +29,16 @@ y un size_t de cant_palabras para darle la memoria dinamica necesaria al vector 
 	{
 		return ST_ERROR_NADA_QUE_CARGAR;
 	}	
-	if((*simpletron = (simpletron_t *) calloc(1, sizeof(simpletron_t)))==NULL)
+	if((*simpletron = (simpletron_t *) calloc(1, sizeof(simpletron_t)))==NULL)/*Pide memoria para una estructura*/
 	{
 		return ST_ERROR_NO_MEM;
 	}	
-	if(((*simpletron)->memoria=vector_crear(cant_palabras))==NULL)
+	if(((*simpletron)->memoria=vector_crear(cant_palabras))==NULL)/*Crea el vector memoria*/
 	{
 		liberar_memoria(simpletron);
 		return ST_ERROR_NO_MEM;
 	}
-	(*simpletron)->acumulador=0;
+	(*simpletron)->acumulador=0;/*Inicializa los valores de la estructura*/
 	(*simpletron)->contador_programa=0;
 	(*simpletron)->opcode=0;
 	(*simpletron)->operando=0;
@@ -47,7 +47,7 @@ y un size_t de cant_palabras para darle la memoria dinamica necesaria al vector 
 }
 
 status_t liberar_memoria(simpletron_t ** simpletron)
-/*Recibe puntero al simpletron para liberar la memoria pedida*/
+/*Recibe puntero doble a la estructura simpletron para liberar la memoria pedida*/
 {	
 
 	if (simpletron!=NULL && *simpletron!=NULL){
@@ -68,14 +68,14 @@ status_t liberar_memoria(simpletron_t ** simpletron)
 
 status_t ejecutar_simpletron (simpletron_t * simpletron)
  /*Recibe el puntero a la estructura de simpletron para hacer un análisis de las instrucciones que se encuentran
- en el vector palabras, y después se llama a una función que realiza la operación necesaria. 
+ en el vector palabras, y después se llama a una función que realiza la operación necesaria por medio del vector de funciones. 
  Ademas, se valida que el operando sea una posicion de memoria existente*/
 {
 	status_t st;
 	vector_punteros_t pt;
 	st=ST_OK;
 
-	if (!simpletron)
+	if (!simpletron)/*Valida*/
 	{
 		return ST_ERROR_PTR_NULO;
 	}
@@ -83,6 +83,7 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
 	while(st==ST_OK)
 	{
 		if((simpletron->opcode=(simpletron->memoria->palabras[simpletron->contador_programa]/10000))<0 && simpletron->opcode>MAX_CANT_OPCODE)
+		/*Divide la memoria en opcode y operando. Verifica que estén dentro del rango utilizable.*/
 		{
 			return ST_ERROR_FUERA_DE_RANGO;
 		}
@@ -91,6 +92,7 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
 			return ST_ERROR_FUERA_DE_RANGO;
 		}
 		switch (simpletron->opcode)
+		/*Decide en que opcode */
 		{
 			case (OP_LEER):
 				pt=F_OP_LEER;
@@ -197,7 +199,8 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
 }
 
 status_t op_leer (simpletron_t * simpletron)
- /*Lee una palabra por stdin a una posicion de memoria que está indicada por el operando (miembro de la estructura simpletron)*/
+ /*Lee una palabra por stdin a una posicion de memoria que está indicada por el operando (miembro de la estructura simpletron)
+ recibe un puntero a la estructura*/
 {
 	long numero;
 	char * pc, lectura[MAX_CADENA];
@@ -229,7 +232,8 @@ status_t op_leer (simpletron_t * simpletron)
 }
 
 status_t op_escribir(simpletron_t * simpletron)
- /*imprime por stdout el contenido de la posicion del operando (miembro de la estructura simpletron)*/
+ /*imprime por stdout el contenido de la posicion del operando (miembro de la estructura simpletron).
+ Recibe un puntero a la estructura simpletron*/
 {
 	if(!simpletron)
 	{	
@@ -241,7 +245,7 @@ status_t op_escribir(simpletron_t * simpletron)
 
 status_t op_cargar (simpletron_t * simpletron)
 /*Carga en el acumulador (miembro de la estructura simpletron) la posicion de memoria indicada 
-por el operando(miembro de la estructura simpletron)*/
+por el operando(miembro de la estructura simpletron). Recibe como argumento un puntero a la estructura simpletron*/
 {
 	if(!simpletron)
 	{		
@@ -254,7 +258,8 @@ por el operando(miembro de la estructura simpletron)*/
 
 status_t op_pcargar (simpletron_t * simpletron)
  /*Carga en el acumulador (miembro de la estructura simpletron) la posicion de memoria indicada 
- por la palabra a la que apunta el operando(miembro de la estructura simpletron)*/
+ por la palabra a la que apunta el operando(miembro de la estructura simpletron).
+ Recibe como argumento un puntero a la estructura simpletron*/
 {
 	if(!simpletron)
 	{	
@@ -274,8 +279,9 @@ status_t op_pcargar (simpletron_t * simpletron)
 }
 
 status_t op_guardar (simpletron_t * simpletron)
- /*guarda en la posicion de memoria indicada por el operando(miembro de la estructura simpletron)
-  lo que está en el acumulador(miembro de la estructura simpletron)*/
+ /*Guarda en la posicion de memoria indicada por el operando(miembro de la estructura simpletron)
+  lo que está en el acumulador(miembro de la estructura simpletron)
+  Recibe como argumento un puntero a la estructura simpletron*/
 {
 	if(!simpletron)
 	{	
@@ -287,7 +293,8 @@ status_t op_guardar (simpletron_t * simpletron)
 
 status_t op_pguardar (simpletron_t * simpletron)
  /*guarda en la posicion de memoria indicada por la palabra a la que apunta el operando (miembro de la estructura simpletron) 
- lo que esta en el acumulador(miembro de la estructura simpletron)*/
+ lo que esta en el acumulador(miembro de la estructura simpletron). 
+ Recibe como argumento un puntero a la estructura simpletron*/
 {
 	if(!simpletron)
 	{	
@@ -307,7 +314,8 @@ status_t op_pguardar (simpletron_t * simpletron)
 
 status_t op_sumar(simpletron_t * simpletron)
  /*suma al acumulador (miembro de la estructura simpletron) lo guardado en la posicion de memoria indcada 
- por el operando(miembro de la estructura simpletron)*/
+ por el operando(miembro de la estructura simpletron).
+ Recibe como argumento un puntero a la estructura simpletron*/
 {
 	if(!simpletron)
 	{	
@@ -323,7 +331,8 @@ status_t op_sumar(simpletron_t * simpletron)
 
 status_t op_restar (simpletron_t * simpletron)
  /*resta al acumulador (miembro de la estructura simpletron) lo guardado en la posicion de memoria indcada 
- por el operando(miembro de la estructura simpletron)*/
+ por el operando(miembro de la estructura simpletron)
+ Recibe como argumento un puntero a la estructura simpletron*/
 {
 	if(!simpletron)
 	{	
@@ -339,7 +348,8 @@ status_t op_restar (simpletron_t * simpletron)
 
 status_t op_dividir (simpletron_t * simpletron)
  /*divide al acumulador (miembro de la estructura simpletron) por lo guardado en la posicion de memoria indicada
-  por el operando(miembro de la estructura simpletron)*/
+  por el operando(miembro de la estructura simpletron).
+  Recibe como argumento un puntero a la estructura simpletron*/
 {
 	if(!simpletron)
 	{	
@@ -354,7 +364,8 @@ status_t op_dividir (simpletron_t * simpletron)
 }
 
 status_t op_multiplicar (simpletron_t * simpletron)
- /*multiplica al acumulador (miembro de la estructura simpletron)lo guardado en la posicion de memoria indicada por el operando(miembro de la estructura simpletron)*/
+ /*multiplica al acumulador (miembro de la estructura simpletron)lo guardado en la posicion de memoria indicada 
+ por el operando(miembro de la estructura simpletron).Recibe como argumento un puntero a la estructura simpletron*/
 {
 	if(!simpletron)
 	{	
@@ -369,7 +380,8 @@ status_t op_multiplicar (simpletron_t * simpletron)
 }
 
 status_t op_jmp (simpletron_t * simpletron)
-/*salta a la posicion de memoria indicada por el operando(miembro de la estructura simpletron)*/
+/*salta a la posicion de memoria indicada por el operando(miembro de la estructura simpletron)
+Recibe como argumento un puntero a la estructura simpletron*/
 {
 	if(!simpletron)
 	{	
@@ -381,7 +393,8 @@ status_t op_jmp (simpletron_t * simpletron)
 
 status_t op_djnz (simpletron_t * simpletron)
  /*decrementa en 1 el acumulador (miembro de la estructura simpletron) y salta a la posicion indicada 
- por el operando (miembro de la estructura simpletron) en el caso que el acumulador sea distinto de 0*/
+ por el operando (miembro de la estructura simpletron) en el caso que el acumulador sea distinto de 0.
+ Recibe como argumento un puntero a la estructura simpletron*/
 {
 	if(!simpletron)
 	{	
