@@ -18,6 +18,7 @@
 #define MSJ_ERROR_NO_NUMERICO "ERROR: no es un numero"
 #define MSJ_ERROR_NADA_QUE_CARGAR "ERROR: no hay nada que cargar"
 #define MSJ_OK "OK"
+#define MSJ_ERROR_EJECUCION "ERROR: iteracion del vector"
 #define MSJ_SALIR "Salir"
 #define MSJ_AYUDA "Finaliza la ayuda"
 
