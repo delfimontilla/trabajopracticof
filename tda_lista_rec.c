@@ -56,13 +56,13 @@ status_t LISTA_destruir_nodo(nodo_t ** pnodo, status_t (*destructor_simpletron)(
 
     if(LISTA_esta_vacia(*pnodo))/*Verifica si el nodo ya está vacio, si lo está, ya sale de la función*/
         return ST_OK;
-
     simpletron = (*pnodo)->simpletron;/*Se hace una copia local del puntero a la estructura*/
     (*pnodo)->siguiente = NULL;/*Se llevan a NULL los nodos y se libera la memoria pedida para este nodo.*/
     (*pnodo)->simpletron = NULL;
+    
     free(*pnodo);
     *pnodo = NULL;
-    return (destructor_simpletron != NULL) ? (*destructor_simpletron)(&simpletron) : ST_OK;/*Verifica si ya se pudo destruir simpletron y si no se pudo se destruye.*/
+    return (destructor_simpletron != NULL) ? (*destructor_simpletron)(&simpletron) : ST_OK;/**/
 }
 
 status_t LISTA_destruir_primero(lista_t * plista, status_t (*destructor_simpletron)(simpletron_t **))/*Destruye el primer nodo de la lista*/
@@ -90,7 +90,7 @@ status_t LISTA_destruir(lista_t * plista, status_t (*destructor_simpletron)(simp
 
     if(LISTA_esta_vacia(*plista))
         return ST_OK;
-
+    
     siguiente = (*plista)->siguiente;/*Copia en una variable local el puntero al siguiente elemento de la lista.*/
     LISTA_destruir_nodo(plista, destructor_simpletron);/*Destruye el nodo actual*/
     return LISTA_destruir(&siguiente, destructor_simpletron);/*Vuelve a llamarse a si misma, pasandole la direccion del siguiente nodo.*/
@@ -170,6 +170,7 @@ status_t LISTA_imprimir(lista_t pnodo, FILE * ofile, status_t (*impresor)(simple
 
 status_t LISTA_recorrer(lista_t pnodo, status_t (*funcion)(simpletron_t *)) /*Recorre la lista desde el nodo pasado como argumento aplicandole la funcion deseada.*/
 {
+
     if(pnodo == NULL)
     {
         return ST_OK;        

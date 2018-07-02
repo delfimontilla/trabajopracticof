@@ -49,6 +49,7 @@ y un size_t de cant_palabras para darle la memoria dinamica necesaria al vector 
 status_t liberar_memoria(simpletron_t ** simpletron)
 /*Recibe puntero al simpletron para liberar la memoria pedida*/
 {	
+
 	if (simpletron!=NULL && *simpletron!=NULL){
 		if((*simpletron)->memoria!=NULL)
 		{

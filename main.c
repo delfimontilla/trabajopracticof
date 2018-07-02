@@ -37,6 +37,8 @@ int main(int argc, char *argv[])
     status_t st;
     FILE *fentrada, *fsalida;
 
+    size_t i,l,posicion_arch;
+
     status_t (*destructor_simpletron)(simpletron_t**)=liberar_memoria;
     status_t (*impresor_txt)(simpletron_t *, FILE *)=imprimir_archivo_txt;
     status_t (*impresor_bin)(simpletron_t *, FILE *)=imprimir_archivo_bin;
@@ -47,7 +49,7 @@ int main(int argc, char *argv[])
     fentrada=NULL;
     fsalida=NULL;
 
-    if((st=validar_argumentos(argc, argv, &argumentos, &cant_palabras))!=ST_OK)
+    if((st=validar_argumentos(argc, argv, &argumentos, &cant_palabras, &posicion_arch))!=ST_OK)
     {
     	if (st==ST_AYUDA)
     	{
@@ -66,12 +68,9 @@ int main(int argc, char *argv[])
     	return EXIT_FAILURE;
     }
    
-
-
-
-/*comienzo while(argumentos.inicio_arch!= NULL)
-{*/
-
+	for(i=0; posicion_arch+i<argc; i++)
+	{
+		l=strlen(argumentos.inicio_arch);
 		if((st=inicializar_simpletron(&simpletron, cant_palabras))!=ST_OK)
 		{
      		imprimir_error(st);
@@ -112,7 +111,7 @@ int main(int argc, char *argv[])
   		   		}	  				    	   					
 				return EXIT_FAILURE;
 		   	}
-		   	if((st=LISTA_crear_nodo(&lsimpletron,simpletron))!=ST_OK)
+		   	if((st=LISTA_insertar_al_final(&lsimpletron, simpletron))!=ST_OK)
 		   	{
 		   		imprimir_error(st);
 		   		free(simpletron);
@@ -123,10 +122,12 @@ int main(int argc, char *argv[])
 	 		   		{
 	  		   			fclose(fentrada);
 	  		   		}  				    	   					
-					imprimir_error(st);
-					return EXIT_FAILURE;
+					imprimir_error(st);	
+	     			return EXIT_FAILURE;						
 	     		}
+	     		return EXIT_FAILURE;
 		   	}
+		   	break;
 		}	
 	   	if (argumentos.fmt_ent_stdin==false)
 	    {
@@ -192,7 +193,7 @@ int main(int argc, char *argv[])
 					return EXIT_FAILURE;
 			   	}
 			} 
-		   	if((st=LISTA_crear_nodo(&lsimpletron,simpletron))!=ST_OK)
+		   	if((st=LISTA_insertar_al_final(&lsimpletron, simpletron))!=ST_OK)
 		   	{
 		   		imprimir_error(st);
 		   		free(simpletron);
@@ -203,24 +204,15 @@ int main(int argc, char *argv[])
 	 		   		{
 	  		   			fclose(fentrada);
 	  		   		}  				    	   					
-					imprimir_error(st);
-					return EXIT_FAILURE;
+					imprimir_error(st);	
+	     			return EXIT_FAILURE;						
 	     		}
+	     		return EXIT_FAILURE;
 		   	}
 		}   
+		argumentos.inicio_arch+=l+1;
+	}
 
-/*
-l=strlen(argumentos.inic_arch);
-argumentos.inic_arch+=l+1;
-}
-*/
-
-
-
-
-
-
-	
  	if((st=LISTA_recorrer(lsimpletron, ejecutar)!=ST_OK))
  	{
    		imprimir_error(st);
@@ -340,7 +332,7 @@ argumentos.inic_arch+=l+1;
 }
 
 
-status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, size_t *cant_palabras)
+status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, size_t *cant_palabras, size_t *j)
  /*recibe arc y argv para realizar las validaciones correspondientes a su cantidad y contenido;
  además recibe el puntero a cant_palabras (cantidad de instrucciones) para cargarle su contenido
  y los dobles punteros al archivo de entrada para abrirlo en caso de ser necesario,
@@ -374,6 +366,7 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 			{
 				argumentos->fmt_ent_stdin=false;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA1];
+				*j=ARG_POS_FENTRADA1;
 			}	
 			return ST_OK;
 		}	
@@ -387,12 +380,14 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 			{
 				argumentos->fmt_ent_stdin=false;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
+				*j=ARG_POS_FENTRADA2;
 			}	
 			if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_BIN)))/*comprueba si el formato de salida es bin*/
 			{
 				argumentos->fmt_sal_txt=false;
 				argumentos->fmt_sal_bin=true;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
+				*j=ARG_POS_FENTRADA2;
 				return ST_OK;
 			}	
 			else if(!(strcmp(argv[ARG_POS_FSALIDA1_TIPO],OPCION_TXT)))/*comprueba si el formato de salida es txt*/
@@ -400,6 +395,7 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 				argumentos->fmt_sal_txt=true;
 				argumentos->fmt_sal_bin=false;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
+				*j=ARG_POS_FENTRADA2;
 				return ST_OK;
 			}	
 		}
@@ -425,6 +421,7 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 				argumentos->fmt_ent_stdin=false;
 				argumentos->inicio_arch=argv[ARG_POS_FENTRADA2];
 			}	
+			*j=ARG_POS_FENTRADA2;
 			return ST_OK;
 		}	
 		else 
@@ -441,7 +438,9 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 				{
 					argumentos->fmt_ent_stdin=false;
 					argumentos->inicio_arch=argv[ARG_POS_FENTRADA3];
+					
 				}	
+				*j=ARG_POS_FENTRADA3;
 				return ST_OK;
 			}	
 			if(!(strcmp(argv[ARG_POS_FSALIDA2_TIPO],OPCION_TXT)))
@@ -456,7 +455,10 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 				{
 					argumentos->fmt_ent_stdin=false;
 					argumentos->inicio_arch=argv[ARG_POS_FENTRADA3];
+				
+
 				}	
+				*j=ARG_POS_FENTRADA3;
 				return ST_OK;
 			}	
 		}
