@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+/*Este .c contiene el vector de errores del programa, cuyas macros se encuentran en los .h de idiomas*/
+
 const char * errmsg[] = {
 	MSJ_OK,
 	MSJ_ERROR_PTR_NULO,

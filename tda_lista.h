@@ -30,6 +30,8 @@
 
 #include <stdio.h>
 
+/*En este archivo, se encuentran los prototipos de las funciones otorgadas para la utilizacion en este trabajo*/
+
 typedef struct nodo {
   struct nodo * siguiente;
   simpletron_t * simpletron;

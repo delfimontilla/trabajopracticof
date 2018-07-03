@@ -3,6 +3,9 @@
 
 #include <stdio.h>
 
+
+/* In this .h are the macros of the messages used in the program in English */
+
 #define MSJ_ERROR "ERROR"
 #define MSJ_ERROR_APERTURA_ARCHIVO " opening file"
 #define MSJ_ERROR_PTR_NULO " null pointer"

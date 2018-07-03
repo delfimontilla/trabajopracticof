@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+/*En este .h se encuentran las macros de los mensajes utilizados en el programa en el idioma Español*/
+
 #define MSJ_ERROR "ERROR"
 #define MSJ_ERROR_APERTURA_ARCHIVO "ERROR: apertura de archivo"
 #define MSJ_ERROR_PTR_NULO "ERROR: puntero nulo"

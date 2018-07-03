@@ -35,7 +35,7 @@
 #define ARG_CANT_PALABRAS "-m"
 #define ARG_FSALIDA "-f"
 
-
+#define MAX_FORMATO 2
 #define TT "t:"
 #define BB "b:"
 

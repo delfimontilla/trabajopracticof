@@ -4,10 +4,12 @@
 #include <stdio.h>
 #include "procesamiento.h"
 
-status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada){
-	
+status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada)
+ /*Esta funcion recibe un puntero a la estructura de parametros para poder abrir los archivos pasados por linea de argumento, 
+ y un puntero doble a un archivo para poder abrir los diferentes archivos*/
+{	
 	char aux1[MAX_CADENA];
-	char aux2[2];/*HARCODEEEEEEEEEEEO*/
+	char aux2[MAX_FORMATO];
 	char * comienzo;
 	char * fin;
 
@@ -15,7 +17,7 @@ status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada){
 	{
 		return ST_ERROR_APERTURA_ARCHIVO;
 	}
- 	if(!(memcpy(aux2,argumentos->inicio_arch, 2)))
+ 	if(!(memcpy(aux2,argumentos->inicio_arch, MAX_FORMATO)))
  	{
 		return ST_ERROR_APERTURA_ARCHIVO;
 	}
@@ -60,8 +62,7 @@ status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada){
 }
 
 status_t leer_archivo_bin (simpletron_t ** simpletron, FILE *fentrada)
- /*recibe el puntero doble a la estructura de simpletron para cargar las instrucciones en el vector palabras, 
- para lo cual necesita la cantidad total de instrucciones (cant_palabras); ademas recibe el puntero
+ /*recibe el puntero doble a la estructura de simpletron para cargar las instrucciones en el vector TDA palabras, ademas recibe el puntero 
  al archivo de entrada para poder leer los datos*/
 {
 	size_t i;
@@ -99,8 +100,7 @@ status_t leer_archivo_bin (simpletron_t ** simpletron, FILE *fentrada)
 
 status_t leer_archivo_txt(simpletron_t ** simpletron, FILE *fentrada)
  /*Recibe el puntero doble a la estructura de simpletron para cargar las instrucciones en el vector palabras,
- la estructura de los argumentos para determinar desde donde se leeran los datos y el puntero al archivo de entrada.
- Tambien se necesita el valor de cant_palabras (cantidad de instrucciones).*/
+ y el puntero al archivo de entrada.*/
 {
 	int i;
 	char aux[MAX_CANT_PALABRA];
@@ -168,6 +168,7 @@ status_t leer_archivo_txt(simpletron_t ** simpletron, FILE *fentrada)
 }
 
 status_t leer_archivo_stdin(simpletron_t ** simpletron)
+/*Recibe un puntero doble a la estructura simpletron para leer archivos desde stdin y guardar en el vector TDA palabras*/
 {
 	int i;
 	char aux[MAX_CANT_PALABRA];
@@ -235,8 +236,10 @@ status_t leer_archivo_stdin(simpletron_t ** simpletron)
 	return ST_OK;
 }
 
-status_t abrir_archivo_salida (parametros_t * argumentos, FILE ** fsalida){
-	
+status_t abrir_archivo_salida (parametros_t * argumentos, FILE ** fsalida)
+ /*Esta funcion recibe un puntero simple a parametros para poder indicar el archivo a abrir. Y tambien un puntero doble a FILE
+ para poder abrir el archivo de salida*/
+{	
 	if(argumentos->fmt_sal_txt==true)
 	{
 		if((*fsalida=fopen(argumentos->nombre_arch_sal,"wt"))==NULL)
