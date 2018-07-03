@@ -83,12 +83,14 @@ status_t ejecutar_simpletron (simpletron_t * simpletron)
 
 	while(st==ST_OK)
 	{
-		if((simpletron->opcode=(simpletron->memoria->palabras[simpletron->contador_programa]/10000))<0 && simpletron->opcode>MAX_CANT_OPCODE)
+		if((simpletron->opcode=(simpletron->memoria->palabras[simpletron->contador_programa]/10000))<0 &&
+		 simpletron->opcode>MAX_CANT_OPCODE)
 		/*Divide la memoria en opcode y operando. Verifica que estén dentro del rango utilizable.*/
 		{
 			return ST_ERROR_FUERA_DE_RANGO;
 		}
-		if((simpletron->operando=(simpletron->memoria->palabras[simpletron->contador_programa]-(simpletron->opcode)*10000))<0 && simpletron->operando>MAX_CANT_OPERANDO)
+		if((simpletron->operando=(simpletron->memoria->palabras[simpletron->contador_programa]-(simpletron->opcode)*10000))<0 &&
+		 simpletron->operando>MAX_CANT_OPERANDO)
 		{
 			return ST_ERROR_FUERA_DE_RANGO;
 		}

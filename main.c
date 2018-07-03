@@ -360,7 +360,8 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 		{
 			argumentos->fmt_sal_txt=true; 
 			argumentos->fmt_sal_bin=false;
-			if (!(strcmp(argv[ARG_POS_FENTRADA1], ARG_STDIN)))/*comprueba si la entrada es por stdin en caso de no pasar la cantidad palabras o formato de salida*/
+			if (!(strcmp(argv[ARG_POS_FENTRADA1], ARG_STDIN)))/*comprueba si la entrada es por stdin en caso de
+			 no pasar la cantidad palabras o formato de salida*/
 			{
 				argumentos->fmt_ent_stdin=true;
 			}	
@@ -374,7 +375,8 @@ status_t validar_argumentos (int argc , char *argv[], parametros_t *argumentos, 
 		}	
 		else 
 		{
-			if (!(strcmp(argv[ARG_POS_FENTRADA2], ARG_STDIN)))/*comprueba si la entrada es por stdin en caso de no pasar la cantidad palabras pero si el formato de salida*/
+			if (!(strcmp(argv[ARG_POS_FENTRADA2], ARG_STDIN)))/*comprueba si la entrada es por stdin en caso de 
+			no pasar la cantidad palabras pero si el formato de salida*/
 			{
 				argumentos->fmt_ent_stdin=true;
 			}	

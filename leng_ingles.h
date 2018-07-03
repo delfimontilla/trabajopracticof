@@ -34,12 +34,18 @@
 #define MSJ_OPCODE "opcode"
 #define MSJ_OPERANDO "operand"
 
-#define MSJ_BIENVENIDA "Welcome to Simpletron! Please enter your program one instruction (or data word) at a time. I will type the location number and a question mark (?). You then type the word for that location. Type the sentinel -99999 to stop entering your program."
+#define MSJ_BIENVENIDA "Welcome to Simpletron! Please enter your program one instruction (or data word) at a time. I will 
+type the location number and a question mark (?). You then type the word for that location. Type the sentinel -99999 to stop
+ entering your program."
 #define MSJ_CARGA_COMPLETA "*** Program upload complete ***"
 #define MSJ_COMIENZO_EJECUCION "*** Program execution starts ***"
 
-#define MSJ_ACLARACION_AYUDA1 "To enter these arguments they must be placed in the order shown below. If you want to leave the field of number of words in default, you must put '-' in the first field, this only works in case the input is stdin. In case of reading from a file, you have to write the exact number of instructions."
-#define MSJ_ACLARACION_AYUDA2 " If you want the entry of instructions to be stdin you must put 'stdin' and in format '-', the same will be done with stdout. In case of placing the output or the entry in a file, the name of the file must be followed by its type. \n"
+#define MSJ_ACLARACION_AYUDA1 "To enter these arguments they must be placed in the order shown below. If you want to leave 
+the field of number of words in default, you must put '-' in the first field, this only works in case the input is stdin. 
+In case of reading from a file, you have to write the exact number of instructions."
+#define MSJ_ACLARACION_AYUDA2 " If you want the entry of instructions to be stdin you must put 'stdin' and in format '-', 
+the same will be done with stdout. In case of placing the output or the entry in a file, the name of the file must be followed
+ by its type. \n"
 
 #define MSJ_TITULO_ARG "Arg.\t"
 #define MSJ_TITULO_OPC "Option\t"
@@ -55,11 +61,13 @@
 
 #define MSJ_SALIDA_ARG "-f\t" 
 #define MSJ_SALIDA_OPC "FMT\t" 
-#define MSJ_SALIDA_DESC "Indicates the format of the output. If FMT is txt, the format must be text. If FMT is bin, the format must be binary, by default the format is text.\n"
+#define MSJ_SALIDA_DESC "Indicates the format of the output. If FMT is txt, the format must be text. If FMT is bin, the format 
+must be binary, by default the format is text.\n"
 
 #define MSJ_ENTRADA_ARG "-\t" 
 #define MSJ_ENTRADA_OPC "FMT:archivo\t" 
-#define MSJ_ENTRADA_DESC "Format and name of the input file. If FMT is t, the format must be text. If FMT is b, the format must be binary, by default the format is text.\n"
+#define MSJ_ENTRADA_DESC "Format and name of the input file. If FMT is t, the format must be text. If FMT is b, the format must 
+be binary, by default the format is text.\n"
 
 #define TAB_TITULO_OP "Operation\t"
 #define TAB_TITULO_CODE "OpCode\t"
