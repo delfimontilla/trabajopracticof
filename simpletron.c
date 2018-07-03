@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "simpletron.h"
 
+/*vector de punteros a las funciones de las operaciones del simpletron*/
 status_t (*p_funciones[12])(simpletron_t *) = {op_leer,
 	op_escribir,
 	op_cargar,

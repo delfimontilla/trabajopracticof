@@ -62,8 +62,8 @@ status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada)
 }
 
 status_t leer_archivo_bin (simpletron_t ** simpletron, FILE *fentrada)
- /*recibe el puntero doble a la estructura de simpletron para cargar las instrucciones en el vector TDA palabras, ademas recibe el puntero 
- al archivo de entrada para poder leer los datos*/
+ /*recibe el puntero doble a la estructura de simpletron para cargar las instrucciones en el vector TDA palabras, 
+ ademas recibe el puntero al archivo de entrada para poder leer los datos*/
 {
 	size_t i;
 	palabra_t instruccion;
@@ -259,8 +259,9 @@ status_t abrir_archivo_salida (parametros_t * argumentos, FILE ** fsalida)
 
 status_t imprimir_archivo_txt(simpletron_t *simpletron, FILE *fsalida)
  /*Recibe el puntero del archivo de salida y a la de simpletron para imprimir los datos guardados en el acumulador, 
- en el contador del programa, la ultima instruccion ejecutada, el ultimo opcode y operando, además de la lista de todas las palabras, en forma de matriz. 
- Esto se hara en un archivo txt o por stdout teniendo en cuenta lo guardado en la estructura de los argumentos*/
+ en el contador del programa, la ultima instruccion ejecutada, el ultimo opcode y operando, 
+ además de la lista de todas las palabras, en forma de matriz. Esto se hara en un archivo txt 
+ o por stdout teniendo en cuenta lo guardado en la estructura de los argumentos*/
 {
 	int i,l;
 

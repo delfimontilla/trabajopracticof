@@ -85,8 +85,8 @@ typedef struct parametros
 }parametros_t; /*estructura con los argumentos que son pasados al momento de ejecucion*/
 
 typedef struct memoria{
-	size_t pedido; 
-	palabra_t * palabras;
+	size_t pedido; /*cantidad de palabras en memoria pedidas*/
+	palabra_t * palabras;/*vector donde se guardan las palabras*/
 } memoria_t;
 
 typedef struct estado

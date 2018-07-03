@@ -4,7 +4,7 @@
 #include <ctype.h>
 
 
-#define LENG_ESPANOL /*elección del idioma del programa*/
+#define LENG_INGLES /*elección del idioma del programa*/
 
 #ifdef LENG_ESPANOL
 #include "leng_espanol.h"

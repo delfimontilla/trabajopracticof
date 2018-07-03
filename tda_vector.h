@@ -1,7 +1,7 @@
 #ifndef TDA_VECTOR__H
 #define TDA_VECTOR__H 1
 
-#include <strdio.h>
+#include <stdio.h>
 
 /*Este .h contiene los prototipos de las funciones implementadas en tda_vector.c*/
 
