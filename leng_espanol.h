@@ -43,7 +43,7 @@
   pero estos pueden estar o no presentes, por lo tanto,
  se deberán colocar en el orden mostrado a continuación.
  En caso de querer dejar el campo de cantidad de palabras en default se deberá colocar '-' en el primer campo"
-#define MSJ_ACLARACION_AYUDA2 "En el siguiente argumento se debe colocar el formato de salida, indicando '-f' y como siguiente}
+#define MSJ_ACLARACION_AYUDA2 "En el siguiente argumento se debe colocar el formato de salida, indicando '-f' y como siguiente
   argumento, se indica si será un archivo txt o un bin.
   Si se quiere que la entrada de instrucciones sea por stdin se deberá colocar '-',
   en caso contrario se deben ingresar los diferentes archivos indicando antes el formato como por ejemplo t:suma.lms 
