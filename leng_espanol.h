@@ -39,12 +39,15 @@
 #define MSJ_CARGA_COMPLETA "*** Carga del programa completa ***"
 #define MSJ_COMIENZO_EJECUCION "*** Comienza la ejecución del programa ***"
 
-#define MSJ_ACLARACION_AYUDA1 "Para ingresar estos argumentos se deberán colocar en el orden mostrado a continuación.
- En caso de querer dejar el campo de cantidad de palabras en default se deberá colocar '-' en el primer campo, 
- esto sólo funciona en el caso de que la entrada sea por stdin. En caso de leer de un archivo se debe especificar la cantidad exacta de instrucciones"
-#define MSJ_ACLARACION_AYUDA2 "Si se quiere que la entrada de instrucciones sea por stdin se deberá colocar 'stdin'
- y en el formato '-', se hará lo mismo con stdout. En caso de colocar de querer la salida o la entrada en un archivo se deberá 
- colocar el nombre del archivo seguido por su tipo.\n "
+#define MSJ_ACLARACION_AYUDA1 "Los argumentos que acompañaran a la ejecucion son posicionales, 
+  pero estos pueden estar o no presentes, por lo tanto,
+ se deberán colocar en el orden mostrado a continuación.
+ En caso de querer dejar el campo de cantidad de palabras en default se deberá colocar '-' en el primer campo"
+#define MSJ_ACLARACION_AYUDA2 "En el siguiente argumento se debe colocar el formato de salida, indicando '-f' y como siguiente}
+  argumento, se indica si será un archivo txt o un bin.
+  Si se quiere que la entrada de instrucciones sea por stdin se deberá colocar '-',
+  en caso contrario se deben ingresar los diferentes archivos indicando antes el formato como por ejemplo t:suma.lms 
+  para un archivo de texto o b:suma.bin para un archivo binario.\n "
 
 #define MSJ_TITULO_ARG "Arg.\t"
 #define MSJ_TITULO_OPC "Opción\t"
