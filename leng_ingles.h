@@ -48,7 +48,7 @@ type the location number and a question mark (?). You then type the word for tha
   argument, it indicates whether it will be a txt file or a bin.
   If you want the entry of instructions to be by stdin you must put '-',
   otherwise, the different files must be entered, indicating the format beforehand, for example t: suma.lms
-  for a text file or b: suma.bin for a binary file. \ n "
+  for a text file or b: suma.bin for a binary file.\n "
 
 #define MSJ_TITULO_ARG "Arg.\t"
 #define MSJ_TITULO_OPC "Option\t"
