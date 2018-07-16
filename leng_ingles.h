@@ -7,21 +7,21 @@
 /* In this .h are the macros of the messages used in the program in English */
 
 #define MSJ_ERROR "ERROR"
-#define MSJ_ERROR_APERTURA_ARCHIVO " opening file"
-#define MSJ_ERROR_PTR_NULO " null pointer"
-#define MSJ_ERROR_CANT_ARG " number of arguments"
-#define MSJ_ERROR_CANT_PALABRAS " number of words"
-#define MSJ_ERROR_NO_MEM " out of memory"
-#define MSJ_ERROR_PALABRA_VACIA " the entered word is null"
-#define MSJ_ERROR_FUERA_DE_RANGO " an attempt was made to access a memory location out of range "
-#define MSJ_ERROR_LIBERAR_MEM " error when freeing memory"
-#define MSJ_ERROR_LECTURA " reading file"
-#define MSJ_ERROR_PALABRA_NEG " negative word"
-#define MSJ_ERROR_ARG_INV " invalid argument"
-#define MSJ_ERROR_NO_NUMERICO " it's not a number"
-#define MSJ_ERROR_NADA_QUE_CARGAR " there's nothing to save"
+#define MSJ_ERROR_APERTURA_ARCHIVO "ERROR: opening file"
+#define MSJ_ERROR_PTR_NULO "ERROR: null pointer"
+#define MSJ_ERROR_CANT_ARG "ERROR: number of arguments"
+#define MSJ_ERROR_CANT_PALABRAS "ERROR: number of words"
+#define MSJ_ERROR_NO_MEM "ERROR: out of memory"
+#define MSJ_ERROR_PALABRA_VACIA "ERROR: the entered word is null"
+#define MSJ_ERROR_FUERA_DE_RANGO "ERROR: an attempt was made to access a memory location out of range "
+#define MSJ_ERROR_LIBERAR_MEM "ERROR: error when freeing memory"
+#define MSJ_ERROR_LECTURA "ERROR: reading file"
+#define MSJ_ERROR_PALABRA_NEG "ERROR: negative word"
+#define MSJ_ERROR_ARG_INV "ERROR: invalid argument"
+#define MSJ_ERROR_NO_NUMERICO "ERROR: it's not a number"
+#define MSJ_ERROR_NADA_QUE_CARGAR "ERROR: there's nothing to save"
 #define MSJ_OK "OK"
-#define MSJ_ERROR_EJECUCION "vector iteration"
+#define MSJ_ERROR_EJECUCION "ERROR: vector iteration"
 #define MSJ_SALIR "Exit"
 #define MSJ_AYUDA "Help finished"
 
@@ -40,12 +40,15 @@ type the location number and a question mark (?). You then type the word for tha
 #define MSJ_CARGA_COMPLETA "*** Program upload complete ***"
 #define MSJ_COMIENZO_EJECUCION "*** Program execution starts ***"
 
-#define MSJ_ACLARACION_AYUDA1 "To enter these arguments they must be placed in the order shown below. If you want to leave 
-the field of number of words in default, you must put '-' in the first field, this only works in case the input is stdin. 
-In case of reading from a file, you have to write the exact number of instructions."
-#define MSJ_ACLARACION_AYUDA2 " If you want the entry of instructions to be stdin you must put 'stdin' and in format '-', 
-the same will be done with stdout. In case of placing the output or the entry in a file, the name of the file must be followed
- by its type. \n"
+#define MSJ_ACLARACION_AYUDA1 "The arguments that accompany the execution are positional,
+  but these may or may not be present, therefore,
+ They should be placed in the order shown below.
+ If you want to leave the field of number of words in default you must put '-' in the first field "
+#define MSJ_ACLARACION_AYUDA2 "In the following argument you must place the output format, indicating '-f' and as following}
+  argument, it indicates whether it will be a txt file or a bin.
+  If you want the entry of instructions to be by stdin you must put '-',
+  otherwise, the different files must be entered, indicating the format beforehand, for example t: suma.lms
+  for a text file or b: suma.bin for a binary file. \ n "
 
 #define MSJ_TITULO_ARG "Arg.\t"
 #define MSJ_TITULO_OPC "Option\t"
