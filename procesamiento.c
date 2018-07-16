@@ -184,15 +184,12 @@ status_t leer_archivo_stdin(simpletron_t ** simpletron)
 	}
  	printf("%s\n",MSJ_BIENVENIDA);	
 	printf("%2.i %s \n", i,PREGUNTA); 
-	i++;
  	while(fgets(aux,MAX_CADENA,stdin)!=NULL)
  	{
  		if(i>(*simpletron)->memoria->pedido)
  		{
  			return ST_ERROR_LECTURA;
- 		}		
- 		printf("%2.i %s \n", i,PREGUNTA);
- 	
+ 		}		 	
 	   	if((fin=strrchr(aux,DELIM_COMA))!=NULL)
 	   	{
  			*fin='\0';
@@ -233,6 +230,7 @@ status_t leer_archivo_stdin(simpletron_t ** simpletron)
  		}	
  		(*simpletron)->memoria->palabras[i]=instruccion;
  		i++;
+		printf("%2.i %s \n", i,PREGUNTA); 
 	}
 	return ST_OK;
 }
