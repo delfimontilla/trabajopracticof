@@ -9,7 +9,7 @@ status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada)
  y un puntero doble a un archivo para poder abrir los diferentes archivos*/
 {	
 	char aux1[MAX_CADENA];
-	char aux2[MAX_FORMATO];
+	char aux2[MAX_CADENA];
 	char * comienzo;
 	char * fin;
 
@@ -26,7 +26,6 @@ status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada)
 		for (comienzo = argumentos->inicio_arch; *comienzo!=DELIM_2PUNTOS; comienzo++)
 		{}
 		comienzo++;
-
 	   	if((fin=strrchr(aux1,DELIM_2PUNTOS))!=NULL)
 	   	{
 			*fin='\0';
@@ -37,7 +36,7 @@ status_t abrir_archivo_entrada (parametros_t * argumentos, FILE ** fentrada)
 				{
 					return ST_ERROR_APERTURA_ARCHIVO;
 				}
-			}	
+			}
 			else if(!(strcmp(aux1,FMT_B)))
 			{
 				argumentos->fmt_ent_bin=true;
@@ -184,6 +183,8 @@ status_t leer_archivo_stdin(simpletron_t ** simpletron)
 		return ST_ERROR_PTR_NULO;
 	}
  	printf("%s\n",MSJ_BIENVENIDA);	
+	printf("%2.i %s \n", i,PREGUNTA); 
+	i++;
  	while(fgets(aux,MAX_CADENA,stdin)!=NULL)
  	{
  		if(i>(*simpletron)->memoria->pedido)
@@ -272,12 +273,12 @@ status_t imprimir_archivo_txt(simpletron_t *simpletron, FILE *fsalida)
     
     fprintf(fsalida,"%s\n", MSJ_REGISTRO);
 	fprintf(fsalida, "%25s: %7X\n",MSJ_ACUM, simpletron->acumulador );
-	fprintf(fsalida, "%25s: %7lu\n",MSJ_CONT_PROG, simpletron->contador_programa );
+	fprintf(fsalida, "%25s: %7i\n",MSJ_CONT_PROG, simpletron->contador_programa );
 	fprintf(fsalida, "%25s: %+7d\n",MSJ_INST, simpletron->memoria->palabras[simpletron->contador_programa]);
 	simpletron->opcode=(simpletron->memoria->palabras[simpletron->contador_programa]/10000);
 	simpletron->operando=(simpletron->memoria->palabras[simpletron->contador_programa]-(simpletron->opcode)*10000);
-	fprintf(fsalida, "%25s: %7lu\n",MSJ_OPCODE, simpletron->opcode );
-	fprintf(fsalida, "%25s: %7lu\n",MSJ_OPERANDO, simpletron->operando);
+	fprintf(fsalida, "%25s: %7i\n",MSJ_OPCODE, simpletron->opcode );
+	fprintf(fsalida, "%25s: %7i\n",MSJ_OPERANDO, simpletron->operando);
 	fprintf(fsalida,"    ");
 	for (l = 0; l < 10; l++)
 		fprintf(fsalida,"  %i   ",l) ;

@@ -200,11 +200,16 @@ Retorna un puntero al dato (la simpletron)*/
 status_t LISTA_imprimir(lista_t pnodo, FILE * ofile, status_t (*impresor)(simpletron_t *, FILE *)) 
 /*Imprime la lista el nodo en el archivo pasado por argumento con la funcion (*impresor)*/
 {
+    status_t st;
     if(pnodo == NULL) /*Validacion de fin de la lista*/
     {
         return ST_OK;
     }    
-    (*impresor)(pnodo->simpletron, ofile); /*Imprime la simpletron contenida en el nodo*/
+    if ((st=(*impresor)(pnodo->simpletron, ofile))!=ST_OK)
+    {
+        return st;
+    }
+    /*Imprime la simpletron contenida en el nodo*/
     LISTA_imprimir(pnodo->siguiente, ofile, impresor);/*Imprime el siguiente nodo*/
     return ST_OK;
 }
@@ -212,12 +217,15 @@ status_t LISTA_imprimir(lista_t pnodo, FILE * ofile, status_t (*impresor)(simple
 status_t LISTA_recorrer(lista_t pnodo, status_t (*funcion)(simpletron_t *)) 
 /*Recorre la lista desde el nodo pasado como argumento aplicandole la funcion deseada.*/
 {
+    status_t st;
     if(pnodo == NULL)
     {
         return ST_OK;        
     }
-    (*funcion)(pnodo->simpletron);
+    if ((st=(*funcion)(pnodo->simpletron))!=ST_OK)
+    {
+        return st;
+    }
     return LISTA_recorrer(pnodo->siguiente, funcion);
 }
-
 #endif
