@@ -7,6 +7,7 @@
 
 #define ARGC_MAX 6
 #define ARGC_MIN 2
+#define ARG_NULO 1
 #define CANT_PALABRAS_DEFAULT 50
 #define ARG_POS_CANT_PALABRAS 1
 #define ARG_POS_CANT_PALABRAS_NUM 2
@@ -72,7 +73,7 @@
 		MSJ_SALIDA_ARG \
 		MSJ_SALIDA_OPC \
 		MSJ_SALIDA_DESC \
-		
+
 #define TXT_AYUDA4 \
 		TAB_TITULO_OP \
 		TAB_TITULO_CODE \
@@ -109,7 +110,7 @@
 		TAB_DIVIDIR_OP \
 		TAB_DIVIDIR_CODE \
 		TAB_DIVIDIR_DESC \
-	
+
 #define TXT_AYUDA6 \
 		TAB_MULT_OP \
 		TAB_MULT_CODE \
@@ -135,4 +136,3 @@
 		TAB_FIN_DESC \
 
 #endif
-

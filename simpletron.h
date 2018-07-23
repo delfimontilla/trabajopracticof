@@ -2,6 +2,7 @@
 #define SIMPLETRON__H 1
 
 #include <stdio.h>
+#include "tipos.h"
 
 /*Contiene los prototipos de las funciones que crean, ejecutan y destruyen una simpletron*/
 

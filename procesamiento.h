@@ -2,6 +2,7 @@
 #define PROCESAMIENTO__H 1
 
 #include <stdio.h>
+#include "tipos.h"
 /* En este .h se encuentran los prototipos de las funciones utilizadas en el procesamiento.c*/
 status_t abrir_archivo_entrada(parametros_t *argumentos, FILE **fentrada);
 status_t leer_archivo_txt(simpletron_t ** simpletron, FILE *fentrada);

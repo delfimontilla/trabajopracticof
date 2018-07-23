@@ -33,21 +33,13 @@
 #define MSJ_OPCODE "opcode"
 #define MSJ_OPERANDO "operando"
 
-#define MSJ_BIENVENIDA "Bienvenide a la Simpletron! Por favor, ingrese su programa una instrucción (o dato) a la vez.
- Yo escribiré la ubicación y un signo de pregunta (?).Luego usted ingrese la palabra para esa ubicación. Ingrese -99999999 para finalizar."
+#define MSJ_BIENVENIDA "Bienvenide a la Simpletron! Por favor, ingrese su programa una instrucción (o dato) a la vez. Yo escribiré la ubicación y un signo de pregunta (?).Luego usted ingrese la palabra para esa ubicación. Ingrese -99999999 para finalizar."
 
 #define MSJ_CARGA_COMPLETA "*** Carga del programa completa ***"
 #define MSJ_COMIENZO_EJECUCION "*** Comienza la ejecución del programa ***"
 
-#define MSJ_ACLARACION_AYUDA1 "Los argumentos que acompañaran a la ejecucion son posicionales, 
-  pero estos pueden estar o no presentes, por lo tanto,
- se deberán colocar en el orden mostrado a continuación.
- En caso de querer dejar el campo de cantidad de palabras en default se deberá colocar '-' en el primer campo"
-#define MSJ_ACLARACION_AYUDA2 "En el siguiente argumento se debe colocar el formato de salida, indicando '-f' y como siguiente
-  argumento, se indica si será un archivo txt o un bin.
-  Si se quiere que la entrada de instrucciones sea por stdin se deberá colocar '-',
-  en caso contrario se deben ingresar los diferentes archivos indicando antes el formato como por ejemplo t:suma.lms 
-  para un archivo de texto o b:suma.bin para un archivo binario.\n "
+#define MSJ_ACLARACION_AYUDA1 "Los argumentos que acompañaran a la ejecucion son posicionales, pero estos pueden estar o no presentes, por lo tanto, se deberán colocar en el orden mostrado a continuación. En caso de querer dejar el campo de cantidad de palabras en default se deberá colocar '-' en el primer campo"
+#define MSJ_ACLARACION_AYUDA2 "En el siguiente argumento se debe colocar el formato de salida, indicando '-f' y como siguiente argumento, se indica si será un archivo txt o un bin. Si se quiere que la entrada de instrucciones sea por stdin se deberá colocar '-', en caso contrario se deben ingresar los diferentes archivos indicando antes el formato como por ejemplo t:suma.lms para un archivo de texto o b:suma.bin para un archivo binario.\n "
 
 #define MSJ_TITULO_ARG "Arg.\t"
 #define MSJ_TITULO_OPC "Opción\t"
@@ -63,13 +55,11 @@
 
 #define MSJ_SALIDA_ARG "-f\t" 
 #define MSJ_SALIDA_OPC "FMT\t" 
-#define MSJ_SALIDA_DESC "Indica el formato de la salida. Si FMT es txt, el formato debe ser texto. Si FMT es bin, el formato debe ser binario,
- por omisión el formato es texto.\n"
+#define MSJ_SALIDA_DESC "Indica el formato de la salida. Si FMT es txt, el formato debe ser texto. Si FMT es bin, el formato debe ser binario, por omisión el formato es texto.\n"
 
 #define MSJ_ENTRADA_ARG "-\t" 
 #define MSJ_ENTRADA_OPC "FMT:archivo\t" 
-#define MSJ_ENTRADA_DESC "Formato y nombre de archivo. Si FMT es t, el formato debe ser texto. Si FMT es b, el formato debe ser binario,
- por omisión el formato es texto.\n"
+#define MSJ_ENTRADA_DESC "Formato y nombre de archivo. Si FMT es t, el formato debe ser texto. Si FMT es b, el formato debe ser binario, por omisión el formato es texto.\n"
 
 #define TAB_TITULO_OP "Operación\t"
 #define TAB_TITULO_CODE "OpCode\t"
